@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { ScrollToTop } from './components/ScrollToTop'
+import { AskLane } from './components/AskLane'
 
 import Home from './pages/Home'
 import Services from './pages/Services'
@@ -38,6 +39,8 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+      {/* Lightweight guided concierge (not a live AI chat). Site-wide. */}
+      <AskLane />
     </div>
   )
 }

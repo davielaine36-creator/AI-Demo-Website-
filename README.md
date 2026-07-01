@@ -1,1 +1,134 @@
-# AI-Demo-Website-
+# Lane Industries — Website
+
+Simple websites, CRM dashboards, and AI follow-up systems for small businesses.
+
+A clean, mobile-first marketing site built with **Vite + React + TypeScript +
+Tailwind CSS**. No backend is required for v1 — the intake and contact forms work
+out of the box using copy-to-clipboard and email-draft fallbacks, and can post to
+an [n8n](https://n8n.io) webhook when one is configured.
+
+---
+
+## Tech stack
+
+- [Vite](https://vitejs.dev/) — build tooling / dev server
+- [React 18](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- [React Router](https://reactrouter.com/) — client-side routing
+- [Tailwind CSS](https://tailwindcss.com/) — styling
+
+## Project structure
+
+```
+src/
+  components/      Reusable UI (Header, Footer, Button, Card, forms, etc.)
+    form/          Form controls + shared result view
+  pages/           One file per route (Home, Services, Intake, …)
+  data/            Site config + content (services, demos, case studies)
+  utils/           Form summary building + submission logic
+  App.tsx          Routes
+  main.tsx         App entry
+  index.css        Tailwind layers + base styles
+public/
+  resources/       Place the intake PDF here (see its README)
+  favicon.svg
+```
+
+---
+
+## Getting started
+
+Requires **Node 18+**.
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Run the dev server (http://localhost:5173)
+npm run dev
+
+# 3. Type-check + production build (outputs to dist/)
+npm run build
+
+# 4. Preview the production build locally
+npm run preview
+```
+
+---
+
+## Environment variables
+
+Copy `.env.example` to `.env` (or set these in Vercel → Settings → Environment
+Variables). All client-exposed vars **must** be prefixed with `VITE_`.
+
+| Variable                      | Required | Description                                                                 |
+| ----------------------------- | -------- | --------------------------------------------------------------------------- |
+| `VITE_CONTACT_EMAIL`          | No       | Email used for `mailto:` fallbacks. Defaults to `hello@laneindustries.dev`. |
+| `VITE_N8N_INTAKE_WEBHOOK_URL` | No       | If set, intake + contact forms `POST` their payload to this webhook.        |
+
+**Form behavior:**
+
+- If `VITE_N8N_INTAKE_WEBHOOK_URL` is present, submissions are `POST`ed there as
+  JSON (`{ formType, submittedAt, summary, data }`).
+- If it's absent **or the request fails**, the form gracefully falls back to a
+  clean, copy-able summary plus a prefilled email draft — nothing is ever lost.
+
+> We intentionally never hardcode a personal email in the codebase — set
+> `VITE_CONTACT_EMAIL` instead.
+
+---
+
+## Adding the intake PDF
+
+The Intake page links to `/resources/client-ai-systems-intake-questionnaire.pdf`.
+
+1. Drop your PDF in `public/resources/`.
+2. Name it exactly `client-ai-systems-intake-questionnaire.pdf`.
+
+A starter copy is already included. See `public/resources/README.md` for details.
+If the file is ever missing, the site still builds — only the download button 404s.
+
+---
+
+## Deploying to Vercel
+
+This is a static SPA — Vercel auto-detects Vite.
+
+1. Push this repo to GitHub.
+2. In Vercel, **Add New → Project** and import the repo.
+3. Framework preset: **Vite** (Build command `npm run build`, output `dist`).
+4. Add any environment variables (see above).
+5. Deploy.
+
+`vercel.json` includes an SPA rewrite so deep links (e.g. `/services`) resolve to
+`index.html` and client-side routing works on refresh.
+
+You can also deploy from the CLI:
+
+```bash
+npm i -g vercel
+vercel        # preview deploy
+vercel --prod # production deploy
+```
+
+---
+
+## Roadmap / TODOs for future upgrades
+
+These are marked with `TODO` comments in the code where relevant:
+
+- [ ] Wire the **live n8n intake webhook** (set `VITE_N8N_INTAKE_WEBHOOK_URL`) and
+      confirm the workflow handles CORS.
+- [ ] **CRM dashboard integration** — connect real lead storage / dashboard.
+- [ ] **Demo embeds** — replace "Demo coming soon" placeholders with live links
+      or embeds (`src/data/demos.ts`).
+- [ ] **Case study updates** — add measured before/after results as pilots
+      complete (`src/data/caseStudies.ts`).
+- [ ] **Analytics** — add a privacy-friendly analytics snippet + a submit event.
+- [ ] **Scheduling link** — add a booking/scheduling link (e.g. Cal.com) to
+      Contact / How It Works.
+- [ ] **OG image** — add a `1200×630` social preview image and reference it in
+      `index.html`.
+
+---
+
+Built with care — useful first, fancy second.

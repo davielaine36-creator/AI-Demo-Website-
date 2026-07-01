@@ -14,6 +14,7 @@ import Demos from './pages/Demos'
 import CaseStudies from './pages/CaseStudies'
 import About from './pages/About'
 import Contact from './pages/Contact'
+import Privacy from './pages/Privacy'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -35,6 +36,7 @@ export default function App() {
           <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

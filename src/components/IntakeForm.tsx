@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Button } from './Button'
 import { Field, TextInput, TextArea, Select, CheckboxGroup } from './form/FormControls'
 import { FormResult } from './form/FormResult'
+import { PrivacyNote } from './PrivacyNote'
 import {
   buildSummary,
   isValidEmail,
@@ -338,6 +339,8 @@ export function IntakeForm() {
           />
         </Field>
       </fieldset>
+
+      <PrivacyNote />
 
       <div className="flex flex-wrap items-center gap-4">
         <Button type="submit" size="lg" disabled={submitting}>

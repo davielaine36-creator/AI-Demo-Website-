@@ -3,6 +3,7 @@ import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { ScrollToTop } from './components/ScrollToTop'
 import { AskLane } from './components/AskLane'
+import { SystemSignature } from './components/SystemSignature'
 
 import Home from './pages/Home'
 import Services from './pages/Services'
@@ -43,6 +44,8 @@ export default function App() {
       <Footer />
       {/* Lightweight guided concierge (not a live AI chat). Site-wide. */}
       <AskLane />
+      {/* Subtle brand-family watermark (desktop, non-interactive). */}
+      <SystemSignature />
     </div>
   )
 }

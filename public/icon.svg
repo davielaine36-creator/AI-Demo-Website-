@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Full-bleed background for maskable app-icon safe zone -->
+  <rect width="512" height="512" fill="#0f172a" />
+  <!-- Same "L" mark + accent dot as the favicon / header logo, centered -->
+  <g transform="translate(41.5 48) scale(13)">
+    <path d="M10 7v18h13" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="23" cy="11" r="3" fill="#3457f1" />
+  </g>
+</svg>

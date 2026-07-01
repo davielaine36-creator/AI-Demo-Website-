@@ -1,0 +1,13 @@
+{
+  "name": "Lane Industries",
+  "short_name": "Lane",
+  "description": "Simple websites, CRM dashboards, and AI follow-up systems for small businesses.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

@@ -3,49 +3,50 @@ export interface Demo {
   title: string
   description: string
   demonstrates: string[]
-  // TODO: replace with a real hosted demo link or embed once available.
+  /** Internal route to a static demo page on this site. */
+  to?: string
+  /** External demo link, if one is ever hosted elsewhere. */
   href?: string
 }
 
 export const DEMOS: Demo[] = [
   {
     id: 'lead-capture',
-    title: 'AI Lead Capture System',
+    title: 'Lead Capture System',
     description:
-      'A customer fills out a form, the lead is saved, the owner is alerted, and a follow-up draft is created.',
+      'Follow an example quote request from first inquiry to won job — captured, summarized for the owner, and moved through simple stages.',
     demonstrates: [
-      'Lead form',
-      'Dashboard',
-      'Alert',
-      'Follow-up draft',
-      'Simple owner workflow',
+      'Simple quote request form',
+      'Clean lead summary for the owner',
+      'Pipeline stages from new to won',
+      'A clear next step for every lead',
     ],
+    to: '/demos/lead-capture',
   },
   {
-    id: 'crm-dashboard',
-    title: 'CRM / Project Dashboard',
+    id: 'follow-up-assistant',
+    title: 'Follow-Up Assistant',
     description:
-      'A lightweight dashboard for tracking customers, jobs, statuses, notes, and next steps.',
+      'AI drafts the follow-up message. The owner reviews, edits, and sends. Nothing goes out automatically.',
     demonstrates: [
-      'Customer records',
-      'Job status',
-      'Follow-up date',
-      'Notes',
-      'Priority',
+      'An example lead waiting on a reply',
+      'AI-drafted follow-up messages',
+      'Human review before anything sends',
+      'Why drafts come before automation',
     ],
+    to: '/demos/follow-up-assistant',
   },
   {
-    id: 'n8n-automation',
-    title: 'n8n Automation Flow',
+    id: 'small-business-dashboard',
+    title: 'Small Business Dashboard',
     description:
-      'A workflow that connects forms, email, alerts, spreadsheets, and AI drafting.',
+      'One simple screen for leads, follow-ups, estimates, and scheduled jobs — designed for owners, not developers.',
     demonstrates: [
-      'Trigger',
-      'Data cleanup',
-      'Notification',
-      'Draft generation',
-      'Owner review',
+      'Weekly numbers at a glance',
+      'Lead list with statuses and next steps',
+      'A short, plain task list',
     ],
+    to: '/demos/small-business-dashboard',
   },
   {
     id: 'shopify-ops',

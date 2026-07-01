@@ -12,6 +12,9 @@ import HowItWorks from './pages/HowItWorks'
 import Intake from './pages/Intake'
 import FullIntake from './pages/FullIntake'
 import Demos from './pages/Demos'
+import LeadCaptureDemo from './pages/demos/LeadCapture'
+import FollowUpAssistantDemo from './pages/demos/FollowUpAssistant'
+import SmallBusinessDashboardDemo from './pages/demos/SmallBusinessDashboard'
 import CaseStudies from './pages/CaseStudies'
 import About from './pages/About'
 import Contact from './pages/Contact'
@@ -34,6 +37,16 @@ export default function App() {
           {/* Alias so /intake/full also resolves to the full form. */}
           <Route path="/intake/full" element={<FullIntake />} />
           <Route path="/demos" element={<Demos />} />
+          {/* Static demo showcase pages — example data only, nothing live. */}
+          <Route path="/demos/lead-capture" element={<LeadCaptureDemo />} />
+          <Route
+            path="/demos/follow-up-assistant"
+            element={<FollowUpAssistantDemo />}
+          />
+          <Route
+            path="/demos/small-business-dashboard"
+            element={<SmallBusinessDashboardDemo />}
+          />
           <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />

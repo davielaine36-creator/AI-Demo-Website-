@@ -1,6 +1,7 @@
 import { PageHero } from '../components/PageHero'
 import { Section } from '../components/Section'
 import { DemoCard } from '../components/DemoCard'
+import { DemoDisclaimer } from '../components/demo/DemoDisclaimer'
 import { CTASection } from '../components/CTASection'
 import { DEMOS } from '../data/demos'
 import { CTA } from '../data/site'
@@ -15,15 +16,21 @@ export default function Demos() {
       />
 
       <Section>
+        <DemoDisclaimer className="mb-10">
+          These are static proof-of-concept demos built with example data — no
+          real client information and no live automation. They show the kinds
+          of systems Lane Industries can build, not client results.
+        </DemoDisclaimer>
+
         <div className="grid gap-6 sm:grid-cols-2">
           {DEMOS.map((demo) => (
             <DemoCard key={demo.id} demo={demo} />
           ))}
         </div>
 
-        <p className="mx-auto mt-10 max-w-2xl rounded-xl border border-slate-200 bg-slate-50 p-4 text-center text-sm leading-relaxed text-slate-600">
-          Some demos are simplified examples. Actual systems are tailored to the
-          business. {/* Note: these are illustrative, not client results. */}
+        <p className="mx-auto mt-10 max-w-2xl text-center text-sm leading-relaxed text-slate-500">
+          Demos are simplified on purpose. An actual system is shaped around
+          the business it's built for.
         </p>
       </Section>
 

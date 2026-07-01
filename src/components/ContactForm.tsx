@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Button } from './Button'
 import { Field, TextInput, TextArea, Select } from './form/FormControls'
 import { FormResult } from './form/FormResult'
+import { PrivacyNote } from './PrivacyNote'
 import {
   buildSummary,
   isValidEmail,
@@ -166,6 +167,8 @@ export function ContactForm() {
           invalid={!!errors.message}
         />
       </Field>
+
+      <PrivacyNote />
 
       <div className="flex flex-wrap items-center gap-4">
         <Button type="submit" size="lg" disabled={submitting}>

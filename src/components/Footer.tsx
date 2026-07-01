@@ -60,6 +60,14 @@ export function Footer() {
                   {CONTACT_EMAIL}
                 </a>
               </li>
+              <li>
+                <Link
+                  to="/privacy"
+                  className="text-sm text-slate-600 transition-colors hover:text-ink"
+                >
+                  Privacy / Data Use
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

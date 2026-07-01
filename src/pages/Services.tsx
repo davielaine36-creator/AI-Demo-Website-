@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { PageHero } from '../components/PageHero'
 import { Section, SectionHeading } from '../components/Section'
 import { ServiceCard } from '../components/ServiceCard'
@@ -75,6 +76,13 @@ export default function Services() {
         <p className="mt-8 text-center text-sm text-slate-500">
           No hard prices here on purpose — every business is different. We'll
           give you a clear starting point after the intake.
+        </p>
+        <p className="mt-2 text-center text-sm text-slate-500">
+          Ready to go deeper?{' '}
+          <Link to="/full-intake" className="font-semibold text-brand-700 hover:text-brand-800">
+            Fill out the full intake questionnaire
+          </Link>
+          .
         </p>
       </Section>
 

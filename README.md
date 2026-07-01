@@ -77,6 +77,25 @@ Variables). All client-exposed vars **must** be prefixed with `VITE_`.
 
 ---
 
+## Intake experience
+
+The site offers three ways for a prospect to share details — all frontend-only,
+all using the same webhook / copy / email logic:
+
+1. **Short intake form** (`/intake`) — a few key questions, fastest way to start.
+2. **Full intake form** (`/full-intake`, also reachable at `/intake/full`) — the
+   complete discovery questionnaire recreated as a clean, grouped web form (12
+   sections). Only name, business, and email are required; everything else is
+   optional. Not a fillable PDF — it's a real web form.
+3. **Download Full Intake PDF** — offline / backup option (see below).
+
+On submit, both forms build a clean formatted summary and:
+
+- `POST` it to `VITE_N8N_INTAKE_WEBHOOK_URL` if that env var is set;
+- otherwise (or if the webhook fails) fall back to **copy-to-clipboard** and a
+  **prefilled email draft** to `VITE_CONTACT_EMAIL` (default
+  `hello@laneindustries.dev`). Nothing is ever lost.
+
 ## Adding the intake PDF
 
 The Intake page links to `/resources/client-ai-systems-intake-questionnaire.pdf`.

@@ -53,10 +53,16 @@ export default function Contact() {
                 <p className="text-sm text-slate-600">
                   Ready to share more detail?
                 </p>
-                <Button to="/intake" variant="ghost" size="sm" className="mt-1 -ml-2">
-                  Go to the intake form
-                  <IconArrowRight className="h-4 w-4" aria-hidden />
-                </Button>
+                <div className="mt-1 flex flex-col items-start">
+                  <Button to="/intake" variant="ghost" size="sm" className="-ml-2">
+                    Short intake form
+                    <IconArrowRight className="h-4 w-4" aria-hidden />
+                  </Button>
+                  <Button to="/full-intake" variant="ghost" size="sm" className="-ml-2">
+                    Full intake questionnaire
+                    <IconArrowRight className="h-4 w-4" aria-hidden />
+                  </Button>
+                </div>
               </div>
             </Card>
           </div>

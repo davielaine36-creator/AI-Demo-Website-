@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { PageHero } from '../components/PageHero'
 import { Section, SectionHeading } from '../components/Section'
 import { Card } from '../components/Card'
@@ -122,6 +123,15 @@ export default function ForSmallBusinesses() {
         secondaryLabel="See example systems"
         secondaryTo="/demos"
       />
+      <div className="container-content pb-16 text-center">
+        <p className="text-sm text-slate-500">
+          Want to give us the full picture?{' '}
+          <Link to="/full-intake" className="font-semibold text-brand-700 hover:text-brand-800">
+            Open the full intake questionnaire
+          </Link>
+          .
+        </p>
+      </div>
     </>
   )
 }

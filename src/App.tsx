@@ -8,6 +8,7 @@ import Services from './pages/Services'
 import ForSmallBusinesses from './pages/ForSmallBusinesses'
 import HowItWorks from './pages/HowItWorks'
 import Intake from './pages/Intake'
+import FullIntake from './pages/FullIntake'
 import Demos from './pages/Demos'
 import CaseStudies from './pages/CaseStudies'
 import About from './pages/About'
@@ -26,6 +27,9 @@ export default function App() {
           <Route path="/for-small-businesses" element={<ForSmallBusinesses />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/intake" element={<Intake />} />
+          <Route path="/full-intake" element={<FullIntake />} />
+          {/* Alias so /intake/full also resolves to the full form. */}
+          <Route path="/intake/full" element={<FullIntake />} />
           <Route path="/demos" element={<Demos />} />
           <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/about" element={<About />} />

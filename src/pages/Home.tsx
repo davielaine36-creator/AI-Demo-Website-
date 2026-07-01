@@ -60,7 +60,11 @@ export default function Home() {
       <section className="surface-gradient border-b border-slate-100">
         <div className="container-content py-20 sm:py-24 lg:py-28">
           <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center rounded-full border border-slate-200 bg-white/70 px-3.5 py-1.5 text-xs font-semibold text-slate-600">
+            <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-3.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-slate-600">
+              <span
+                aria-hidden
+                className="h-1.5 w-1.5 rounded-full bg-emerald-500"
+              />
               Small-business AI systems studio
             </span>
             <h1 className="mt-6 text-4xl font-bold leading-tight tracking-tight text-ink sm:text-5xl lg:text-[3.4rem]">

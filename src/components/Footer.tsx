@@ -76,8 +76,8 @@ export function Footer() {
           <p className="text-sm text-slate-500">
             © {year} {SITE.name}. All rights reserved.
           </p>
-          <p className="text-sm text-slate-400">
-            Built with care — useful first, fancy second.
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-400">
+            A Lane Industries System
           </p>
         </div>
       </div>

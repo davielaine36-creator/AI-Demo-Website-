@@ -35,6 +35,18 @@ export default {
           'Arial',
           'sans-serif',
         ],
+        // Used for small uppercase "system labels" — a subtle nod to the
+        // Laine HQ product family, kept light and public-facing.
+        mono: [
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          'Liberation Mono',
+          'Courier New',
+          'monospace',
+        ],
       },
       boxShadow: {
         soft: '0 1px 2px 0 rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.12)',

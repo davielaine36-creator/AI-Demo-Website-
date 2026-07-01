@@ -21,7 +21,7 @@ export function PageHero({
       <div className="container-content py-16 sm:py-20 lg:py-24">
         <div className={center ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl'}>
           {eyebrow && (
-            <p className="mb-4 text-sm font-semibold uppercase tracking-wide text-brand-600">
+            <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-brand-600">
               {eyebrow}
             </p>
           )}

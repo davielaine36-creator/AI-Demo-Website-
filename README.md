@@ -3,9 +3,11 @@
 Simple websites, CRM dashboards, and AI follow-up systems for small businesses.
 
 A clean, mobile-first marketing site built with **Vite + React + TypeScript +
-Tailwind CSS**. No backend is required for v1 — the intake and contact forms work
-out of the box using copy-to-clipboard and email-draft fallbacks, and can post to
-an [n8n](https://n8n.io) webhook when one is configured.
+Tailwind CSS**. The intake and contact forms work out of the box using
+copy-to-clipboard and email-draft fallbacks, and can post to an
+[n8n](https://n8n.io) webhook when one is configured. The only backend is a
+single serverless function powering the **Ask Lane AI chatbot** — see
+[`docs/ask-lane-ai-chatbot.md`](docs/ask-lane-ai-chatbot.md).
 
 ---
 
@@ -19,11 +21,14 @@ an [n8n](https://n8n.io) webhook when one is configured.
 ## Project structure
 
 ```
+api/
+  ask-lane.ts      Serverless endpoint for the Ask Lane AI chatbot (Vercel Function)
 src/
   components/      Reusable UI (Header, Footer, Button, Card, forms, etc.)
     form/          Form controls + shared result view
   pages/           One file per route (Home, Services, Intake, …)
-  data/            Site config + content (services, demos, case studies)
+  data/            Site config + content (services, demos, Ask Lane knowledge)
+  lib/             Ask Lane retrieval (keyword scoring over the knowledge chunks)
   utils/           Form summary building + submission logic
   App.tsx          Routes
   main.tsx         App entry
@@ -64,6 +69,8 @@ Variables). All client-exposed vars **must** be prefixed with `VITE_`.
 | ----------------------------- | -------- | --------------------------------------------------------------------------- |
 | `VITE_CONTACT_EMAIL`          | No       | Email used for `mailto:` fallbacks. Defaults to `hello@laneindustries.dev`. |
 | `VITE_N8N_INTAKE_WEBHOOK_URL` | No       | If set, intake + contact forms `POST` their payload to this webhook.        |
+| `ANTHROPIC_API_KEY`           | For live AI chat | **Server-side only — never `VITE_`-prefixed.** Powers the Ask Lane chatbot. Without it, Ask Lane falls back to the guided quick-start. |
+| `ASK_LANE_MODEL`              | No       | Optional model override for Ask Lane (default `claude-opus-4-8`).           |
 
 **Form behavior:**
 

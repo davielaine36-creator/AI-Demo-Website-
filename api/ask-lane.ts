@@ -1,0 +1,178 @@
+/*
+ * Ask Lane — serverless chat endpoint (Vercel Function).
+ *
+ * POST /api/ask-lane
+ *   body:    { messages: [{ role: 'user' | 'assistant', content: string }, ...] }
+ *   returns: { reply: string, links: { label, to }[], fallback: boolean }
+ *
+ * The Anthropic API key lives ONLY here, server-side, as the ANTHROPIC_API_KEY
+ * environment variable. Without it the endpoint degrades gracefully
+ * (fallback: true) so the widget never breaks. User content is never logged.
+ */
+
+import type { VercelRequest, VercelResponse } from '@vercel/node'
+import Anthropic from '@anthropic-ai/sdk'
+import { retrieveKnowledge, collectLinks } from '../src/lib/askLaneRetrieval'
+import type { KnowledgeChunk, KnowledgeLink } from '../src/data/askLaneKnowledge'
+
+// One clear default model; override with the optional ASK_LANE_MODEL env var
+// (e.g. "claude-haiku-4-5" for faster/cheaper replies).
+const DEFAULT_MODEL = 'claude-opus-4-8'
+
+// Payload limits — chat questions are short; anything bigger is rejected.
+const MAX_MESSAGES = 12
+const MAX_MESSAGE_CHARS = 1500
+const MAX_TOTAL_CHARS = 8000
+const MAX_REPLY_TOKENS = 600
+
+interface ChatMessage {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+const FALLBACK_LINKS: KnowledgeLink[] = [
+  { label: 'Start the short intake', to: '/intake' },
+  { label: 'Contact us', to: '/contact' },
+]
+
+const NOT_CONFIGURED_REPLY =
+  'Live AI chat is not configured yet, but you are not stuck: the guided ' +
+  'quick-start below can point you to the right starting place, or you can ' +
+  'use the short intake form and we will follow up personally.'
+
+/** Validate the request body into a clean message list, or return null. */
+function parseMessages(body: unknown): ChatMessage[] | null {
+  let data = body
+  if (typeof data === 'string') {
+    try {
+      data = JSON.parse(data)
+    } catch {
+      return null
+    }
+  }
+  if (typeof data !== 'object' || data === null) return null
+
+  const raw = (data as { messages?: unknown }).messages
+  if (!Array.isArray(raw) || raw.length === 0 || raw.length > MAX_MESSAGES) {
+    return null
+  }
+
+  const messages: ChatMessage[] = []
+  let totalChars = 0
+  for (const entry of raw) {
+    if (typeof entry !== 'object' || entry === null) return null
+    const { role, content } = entry as { role?: unknown; content?: unknown }
+    if (role !== 'user' && role !== 'assistant') return null
+    if (typeof content !== 'string') return null
+    const trimmed = content.trim()
+    if (trimmed.length === 0 || trimmed.length > MAX_MESSAGE_CHARS) return null
+    totalChars += trimmed.length
+    if (totalChars > MAX_TOTAL_CHARS) return null
+    messages.push({ role, content: trimmed })
+  }
+
+  // The conversation must end with the user's question.
+  if (messages[messages.length - 1].role !== 'user') return null
+  return messages
+}
+
+function buildSystemPrompt(chunks: KnowledgeChunk[]): string {
+  const knowledge = chunks
+    .map((c) => `### ${c.title} (${c.category})\n${c.content}`)
+    .join('\n\n')
+
+  return `You are "Ask Lane", the website assistant for Lane Industries — a small studio that builds simple websites, lead-tracking dashboards, and AI-assisted follow-up systems for small businesses.
+
+Personality: calm, practical, small-business friendly, honest, plain English. Not hypey, not overly technical, protective of Lane Industries' reputation.
+
+Hard rules:
+- Answer ONLY from the knowledge below. If it does not cover the question, say so plainly and recommend the short intake form (/intake) or the contact page (/contact) instead of guessing.
+- Keep answers short: 2–5 plain sentences, website-chat length. Plain text only — no markdown, headers, or bullet lists.
+- Never guarantee revenue, leads, rankings, or any business outcome, and never invent client results, numbers, or case studies.
+- The demos are static examples with example data — never describe them as live client systems.
+- Never ask for passwords, API keys, payment information, private customer lists, or sensitive customer data. If the visitor shares something sensitive, gently tell them not to send it through this chat.
+- Do not give legal, tax, compliance, or security guarantees or advice.
+- If asked about price, give the rough range from the knowledge and recommend the short intake for a scoped, specific quote. Rough ranges are starting points, not final prices.
+- If asked about ownership or hosting, explain the three models: Lane Managed Build (default), Client-Owned Build, and Transfer Later.
+- If asked whether AI can message customers, explain that Lane starts with "AI drafts, a human approves" — nothing auto-sends by default.
+- Stay on topic: Lane Industries and small-business websites/systems. For anything else (general coding help, essays, other companies), politely say it is outside what this chat covers and steer back.
+- When it fits, end with one useful next step in prose, e.g. the short intake at /intake, the contact page at /contact, the demos at /demos, or /for-small-businesses. Only mention paths that exist: /intake, /full-intake, /contact, /demos, /services, /how-it-works, /for-small-businesses, /case-studies, /privacy.
+
+Knowledge:
+
+${knowledge}`
+}
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  res.setHeader('Cache-Control', 'no-store')
+
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST')
+    res.status(405).json({ error: 'method_not_allowed' })
+    return
+  }
+
+  const messages = parseMessages(req.body)
+  if (!messages) {
+    res.status(400).json({
+      error: 'invalid_request',
+      message:
+        'Expected { messages: [{ role, content }, ...] } ending with a user message, within size limits.',
+    })
+    return
+  }
+
+  const question = messages[messages.length - 1].content
+  const chunks = retrieveKnowledge(question)
+  const links = collectLinks(chunks)
+
+  const apiKey = process.env.ANTHROPIC_API_KEY
+  if (!apiKey) {
+    // No key configured — never break the widget; hand back the guided path.
+    res.status(200).json({
+      reply: NOT_CONFIGURED_REPLY,
+      links: FALLBACK_LINKS,
+      fallback: true,
+    })
+    return
+  }
+
+  try {
+    const anthropic = new Anthropic({ apiKey })
+    const response = await anthropic.messages.create({
+      model: process.env.ASK_LANE_MODEL || DEFAULT_MODEL,
+      max_tokens: MAX_REPLY_TOKENS,
+      system: buildSystemPrompt(chunks),
+      messages,
+    })
+
+    const reply = response.content
+      .filter((block): block is Anthropic.TextBlock => block.type === 'text')
+      .map((block) => block.text)
+      .join('\n')
+      .trim()
+
+    if (!reply) {
+      // Refusal or empty output — steer to a human instead of guessing.
+      res.status(200).json({
+        reply:
+          "I can't help with that one here. For anything about Lane Industries, ask away — otherwise the contact page is the best route.",
+        links: FALLBACK_LINKS,
+        fallback: false,
+      })
+      return
+    }
+
+    res.status(200).json({ reply, links, fallback: false })
+  } catch (error) {
+    // Log the error class/status only — never user content or prompt text.
+    if (error instanceof Anthropic.APIError) {
+      console.error(`ask-lane upstream error: ${error.name} (${error.status})`)
+    } else {
+      console.error(
+        `ask-lane error: ${error instanceof Error ? error.name : 'unknown'}`,
+      )
+    }
+    res.status(502).json({ error: 'upstream_error' })
+  }
+}

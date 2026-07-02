@@ -28,7 +28,7 @@ const ITEMS: Item[] = [
   },
   {
     heading: 'About “Ask Lane”',
-    body: 'Ask Lane is a simple guided website assistant that points you toward the right starting place. It is not a live AI chat, and it does not send your answers anywhere on its own.',
+    body: 'Ask Lane is an AI-powered website assistant. Questions you type in the chat are sent to our server and processed by an AI service to generate an answer — we use them only to answer you, and we don’t use the chat to build marketing profiles. Please don’t type passwords, payment details, API keys, or sensitive customer data into the chat. The guided quick-start option works entirely in your browser and doesn’t send anything.',
   },
   {
     heading: 'How submissions reach us',

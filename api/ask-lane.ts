@@ -39,7 +39,7 @@ const MAX_REPLY_TOKENS = 600
 const FRIENDLY_MAX_CHARS = 1500 // soft cap w/ a friendly reply (input is capped at 1000 client-side)
 const DAILY_LIMIT = 10 // AI messages per browser per 24h
 const DAILY_WINDOW_MS = 24 * 60 * 60 * 1000
-const SPAM_LIMIT = 3 // messages per rolling 60s
+const SPAM_LIMIT = 4 // messages per rolling 60s
 const SPAM_WINDOW_MS = 60 * 1000
 const USAGE_COOKIE = 'al_pv'
 
@@ -59,16 +59,18 @@ const NOT_CONFIGURED_REPLY =
   'use the short intake form and we will follow up personally.'
 
 const TOO_LONG_REPLY =
-  'That message is a bit long for the preview chat. Try a shorter question, ' +
-  'or use the short intake form to share the full details.'
+  'That’s a little too much for the preview chat. Try one shorter question, ' +
+  'or use the intake form if you want to share the full context.'
 
 const RATE_LIMIT_REPLY =
-  "You've reached the preview chat limit for now. If you're seriously " +
-  'exploring a project, the best next step is the intake form or the contact page.'
+  'You’ve reached the preview chat limit for now. If you’re seriously exploring ' +
+  'a project, the intake form or contact page is the best next step — we’ll use ' +
+  'that to give you a more specific recommendation.'
 
 const SLOW_DOWN_REPLY =
-  "You're sending messages quickly — give me a few seconds between questions. " +
-  'In the meantime, the intake form or contact page is the fastest way to a real answer.'
+  'You’re sending questions quickly. Give it a few seconds between messages so ' +
+  'the preview stays reliable. If this is about a real project, the intake form ' +
+  'or contact page is the fastest next step.'
 
 /** Validate the request body into a clean message list, or return null. */
 function parseMessages(body: unknown): ChatMessage[] | null {
@@ -198,7 +200,10 @@ function setUsageCookie(req: VercelRequest, res: VercelResponse, usage: Usage): 
   )
 }
 
-/** Basic cross-site guard: allow same-origin, localhost, and *.vercel.app. */
+/** Cross-site guard: allow only same-origin (the Origin host matching the
+ *  request Host) and localhost for dev. Vercel preview deployments pass because
+ *  the widget calls its own preview host (same-origin). Cross-site POSTs — including
+ *  from a different *.vercel.app project — are rejected. */
 function isAllowedOrigin(req: VercelRequest): boolean {
   const origin = req.headers.origin
   if (!origin) return true // non-browser or same-origin request without an Origin header
@@ -208,10 +213,9 @@ function isAllowedOrigin(req: VercelRequest): boolean {
   } catch {
     return false
   }
-  if (req.headers.host && host === req.headers.host) return true // same-origin (prod + previews)
+  if (req.headers.host && host === req.headers.host) return true // same-origin (production + Vercel previews)
   const bare = host.split(':')[0]
-  if (bare === 'localhost' || bare === '127.0.0.1') return true
-  return host.endsWith('.vercel.app')
+  return bare === 'localhost' || bare === '127.0.0.1'
 }
 
 /** Friendly limit reply — rendered by the widget as a normal Ask Laine bubble

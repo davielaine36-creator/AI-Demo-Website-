@@ -163,10 +163,12 @@ Because each AI reply costs Anthropic tokens, `api/ask-lane.ts` applies
 - **Length:** messages over ~1,500 chars get a friendly "too long" reply (the
   widget already caps input at 1,000).
 - **Daily cap:** ~10 AI messages per browser per 24 hours.
-- **Spam guard:** at most ~3 messages per rolling 60 seconds.
-- **Origin guard:** POSTs are allowed only from the same origin, `localhost`,
-  and `*.vercel.app` (so Vercel previews keep working); obvious cross-site
-  POSTs are rejected.
+- **Spam guard:** at most ~4 messages per rolling 60 seconds.
+- **Origin guard:** POSTs are allowed only from the same origin (the request's
+  `Origin` host matching its `Host`) plus `localhost`/`127.0.0.1` for local dev.
+  Vercel preview deployments keep working because the widget calls its own
+  preview host (same-origin); cross-site POSTs — including from a different
+  `*.vercel.app` project — are rejected.
 
 State rides on a single `HttpOnly; Secure; SameSite=Lax` cookie (`al_pv`) — **no
 database, KV, Redis, auth, or new env var.** When a limit is hit, the endpoint

@@ -35,7 +35,9 @@ src/
   index.css        Tailwind layers + base styles
 public/
   resources/       Place the intake PDF here (see its README)
-  favicon.svg
+  brand/           Brand mark source (laine-icon-source.png)
+  favicon.ico, favicon-16.png, favicon-32.png, apple-touch-icon.png
+  icon-192.png, icon-512.png, icon-maskable-512.png, site.webmanifest
 ```
 
 ---

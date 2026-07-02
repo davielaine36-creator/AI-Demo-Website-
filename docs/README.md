@@ -25,6 +25,8 @@ doc** (business, sales, delivery, and operations) unless marked
 | `discovery-call-script.md` | Opening, questions, framing, closing, objections | Whoever runs the call | During/before a discovery call | Internal |
 | `client-question-answer-bank.md` | Plain-English answers to ~30 common questions + pitches | David / Elysio | Call prep + founder training | Internal |
 | `one-page-call-cheat-sheet.md` | Compressed glance-before-a-call quick reference | David / Elysio | Right before / during a call | Internal (print it) |
+| `client-decision-guide.md` | Help owners choose what to start with, rough cost/timeline, included/excluded, ownership, readiness, industry examples | David / Elysio | Helping a prospect decide; powers Ask Lane | Internal (plain-English parts are client-facing) |
+| `ask-lane-knowledge.md` | How the site's Ask Lane concierge works + where its answers come from | Both | When updating Ask Lane or the decision guide | Internal (about the website helper) |
 
 ### 3. Proposal / Client Start
 | Doc | What it's for | Who uses it | When | Internal / Client-facing |
@@ -66,6 +68,7 @@ Documents (or parts of them) meant to be shared **with** clients:
 - `managed-support-billing-model.md` — the client-friendly wording + tier descriptions.
 - Handoff output from `client-handoff-checklist.md` — walkthrough + instructions.
 - Selected answers from `client-question-answer-bank.md` — reuse in emails/texts.
+- Plain-English parts of `client-decision-guide.md` — help a prospect decide what to start with.
 
 > Rule: never hand a client an internal doc raw. Pull the relevant plain-English
 > parts into a clean message, proposal, or email.

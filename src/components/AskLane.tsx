@@ -2,17 +2,24 @@ import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Button } from './Button'
 import { IconSparkles, IconClose, IconArrowRight, IconCheck } from './Icons'
+import {
+  STARTING_POINTS,
+  ASK_LANE_FAQ,
+  type StartingPointId,
+} from '../data/askLaneKnowledge'
 
 /*
  * "Ask Lane" — a lightweight, guided website concierge.
  *
  * This is intentionally NOT a real AI chatbot. It asks a few simple questions
- * and maps the answers to a recommended starting point. No backend, no API
- * keys, no data leaves the browser.
+ * and maps the answers to a recommended starting point, then surfaces honest
+ * cost/timeline ranges and common questions from the curated knowledge brain in
+ * src/data/askLaneKnowledge.ts (sourced from docs/client-decision-guide.md).
+ * No backend, no API keys, no data leaves the browser.
  *
  * TODO (future upgrade — after launch):
  *   - Replace this guided assistant with a real AI chatbot.
- *   - Use site content / FAQ / service data (src/data/*) as the knowledge base.
+ *   - Reuse the knowledge brain (src/data/askLaneKnowledge.ts) as its source.
  *   - Add a backend / serverless API route so no AI API keys are exposed
  *     client-side.
  *   - Add cost limits, safety rules, and lead-capture logging.
@@ -83,11 +90,24 @@ const RECOMMENDATIONS: Record<MessyKey, Recommendation> = {
   },
 }
 
+// Map each "what feels messy" answer to a starting point in the knowledge brain,
+// so the result can show an honest timeline, rough cost, and what's included.
+const MESSY_TO_STARTING_POINT: Record<MessyKey, StartingPointId> = {
+  Website: 'website',
+  Leads: 'lead-tracker',
+  'Follow-up': 'follow-up',
+  'Customer tracking': 'dashboard',
+  Scheduling: 'scheduling',
+  'Shopify / store operations': 'shopify',
+  'Not sure yet': 'not-sure',
+}
+
 const TOTAL_STEPS = 4 // Q1–Q4, then the result view.
 
 export function AskLane() {
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState(0)
+  const [faqOpen, setFaqOpen] = useState(false)
   const [businessType, setBusinessType] = useState('')
   const [messy, setMessy] = useState<MessyKey | ''>('')
   const [improve, setImprove] = useState('')
@@ -115,6 +135,7 @@ export function AskLane() {
 
   const reset = () => {
     setStep(0)
+    setFaqOpen(false)
     setBusinessType('')
     setMessy('')
     setImprove('')
@@ -130,6 +151,7 @@ export function AskLane() {
   const back = () => setStep((s) => Math.max(s - 1, 0))
 
   const recommendation = messy ? RECOMMENDATIONS[messy] : null
+  const startingPoint = messy ? STARTING_POINTS[MESSY_TO_STARTING_POINT[messy]] : null
 
   return (
     <>
@@ -183,7 +205,7 @@ export function AskLane() {
             </div>
 
             {/* Progress */}
-            {step < TOTAL_STEPS && (
+            {!faqOpen && step < TOTAL_STEPS && (
               <div className="flex gap-1.5 px-5 pt-4" aria-hidden>
                 {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
                   <span
@@ -198,8 +220,56 @@ export function AskLane() {
 
             {/* Body */}
             <div className="flex-1 overflow-y-auto px-5 py-6">
+              {/* Common questions (FAQ) — available from the first step or result */}
+              {faqOpen && (
+                <div className="space-y-4">
+                  <button
+                    type="button"
+                    onClick={() => setFaqOpen(false)}
+                    className="text-sm font-medium text-slate-500 hover:text-ink"
+                  >
+                    ← Back
+                  </button>
+                  <h3 className="text-base font-semibold text-ink">
+                    Common questions
+                  </h3>
+                  <div className="space-y-2">
+                    {ASK_LANE_FAQ.map((item) => (
+                      <details
+                        key={item.id}
+                        className="group rounded-xl border border-slate-200 px-4 py-3"
+                      >
+                        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold text-ink">
+                          {item.question}
+                          <IconArrowRight
+                            className="h-4 w-4 flex-shrink-0 text-slate-400 transition-transform group-open:rotate-90"
+                            aria-hidden
+                          />
+                        </summary>
+                        <p className="mt-2.5 text-sm leading-relaxed text-slate-600">
+                          {item.answer}
+                        </p>
+                      </details>
+                    ))}
+                  </div>
+                  <p className="rounded-xl bg-slate-50 px-3 py-2.5 text-xs leading-relaxed text-slate-500">
+                    This is a quick guide, not a live AI chat yet. Rough ranges and
+                    starting points — confirmed in writing, not a quote or
+                    guarantee. This isn't legal advice.
+                  </p>
+                  <div className="flex flex-col gap-2 pt-1">
+                    <Button to="/intake" className="w-full">
+                      Start Short Intake
+                    </Button>
+                    <Button to="/contact" variant="ghost" className="w-full">
+                      Contact Us
+                    </Button>
+                  </div>
+                </div>
+              )}
+
               {/* Q1 */}
-              {step === 0 && (
+              {!faqOpen && step === 0 && (
                 <div className="space-y-4">
                   <h3 className="text-base font-semibold text-ink">
                     What kind of business do you run?
@@ -216,11 +286,18 @@ export function AskLane() {
                     }}
                   />
                   <p className="text-xs text-slate-500">Optional — a rough idea is fine.</p>
+                  <button
+                    type="button"
+                    onClick={() => setFaqOpen(true)}
+                    className="text-sm font-medium text-brand-700 hover:text-brand-800"
+                  >
+                    Or browse common questions →
+                  </button>
                 </div>
               )}
 
               {/* Q2 */}
-              {step === 1 && (
+              {!faqOpen && step === 1 && (
                 <div className="space-y-4">
                   <h3 className="text-base font-semibold text-ink">
                     What feels messy right now?
@@ -252,7 +329,7 @@ export function AskLane() {
               )}
 
               {/* Q3 */}
-              {step === 2 && (
+              {!faqOpen && step === 2 && (
                 <div className="space-y-4">
                   <h3 className="text-base font-semibold text-ink">
                     What do you want to improve first?
@@ -270,7 +347,7 @@ export function AskLane() {
               )}
 
               {/* Q4 */}
-              {step === 3 && (
+              {!faqOpen && step === 3 && (
                 <div className="space-y-4">
                   <h3 className="text-base font-semibold text-ink">
                     How soon are you looking to fix it?
@@ -302,7 +379,7 @@ export function AskLane() {
               )}
 
               {/* Result */}
-              {step === TOTAL_STEPS && recommendation && (
+              {!faqOpen && step === TOTAL_STEPS && recommendation && (
                 <div className="space-y-5">
                   <div className="flex items-start gap-3">
                     <span className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full bg-brand-50 text-brand-600">
@@ -320,6 +397,59 @@ export function AskLane() {
                   <p className="text-sm leading-relaxed text-slate-600">
                     {recommendation.detail}
                   </p>
+
+                  {/* Honest ranges + what's included, from the knowledge brain */}
+                  {startingPoint && (
+                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                            Typical timeline
+                          </p>
+                          <p className="mt-0.5 text-sm font-medium text-ink">
+                            {startingPoint.timeline}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                            Rough investment
+                          </p>
+                          <p className="mt-0.5 text-sm font-medium text-ink">
+                            {startingPoint.investment}
+                          </p>
+                        </div>
+                      </div>
+                      <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                        Usually includes
+                      </p>
+                      <ul className="mt-2 space-y-1.5">
+                        {startingPoint.includes.map((item) => (
+                          <li key={item} className="flex items-start gap-2">
+                            <IconCheck
+                              className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-600"
+                              aria-hidden
+                            />
+                            <span className="text-sm leading-relaxed text-slate-600">
+                              {item}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="mt-3 text-xs leading-relaxed text-slate-500">
+                        Rough starting ranges, confirmed by scope in writing — not a
+                        quote or guarantee.
+                      </p>
+                    </div>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => setFaqOpen(true)}
+                    className="flex w-full items-center justify-between rounded-xl border border-slate-200 px-4 py-3 text-left text-sm font-semibold text-ink hover:border-slate-300 hover:bg-slate-50"
+                  >
+                    Common questions (cost, timeline, ownership…)
+                    <IconArrowRight className="h-4 w-4 text-slate-400" aria-hidden />
+                  </button>
 
                   <div className="flex flex-col gap-2">
                     <Button to="/intake" className="w-full">
@@ -350,7 +480,7 @@ export function AskLane() {
             </div>
 
             {/* Footer nav (question steps only) */}
-            {step < TOTAL_STEPS && (
+            {!faqOpen && step < TOTAL_STEPS && (
               <div className="flex items-center justify-between border-t border-slate-100 px-5 py-3">
                 <button
                   type="button"

@@ -11,7 +11,7 @@ import {
   DEFAULT_CHUNK_IDS,
   type KnowledgeChunk,
   type KnowledgeLink,
-} from '../data/askLaneKnowledge'
+} from '../data/askLaneKnowledge.js'
 
 // Common words that carry no retrieval signal.
 const STOPWORDS = new Set([

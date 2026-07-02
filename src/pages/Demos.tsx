@@ -19,7 +19,7 @@ export default function Demos() {
         <DemoDisclaimer className="mb-10">
           These are static proof-of-concept demos built with example data — no
           real client information and no live automation. They show the kinds
-          of systems Lane Industries can build, not client results.
+          of systems Laine Industries can build, not client results.
         </DemoDisclaimer>
 
         <div className="grid gap-6 sm:grid-cols-2">

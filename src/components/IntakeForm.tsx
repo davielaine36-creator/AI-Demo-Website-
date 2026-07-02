@@ -148,7 +148,7 @@ export function IntakeForm() {
     }
 
     setSubmitting(true)
-    const summary = buildSummary('Lane Industries — Intake Summary', buildSections())
+    const summary = buildSummary('Laine Industries — Intake Summary', buildSections())
 
     const res = await submitForm(
       { ...form } as unknown as Record<string, string | string[]>,
@@ -171,7 +171,7 @@ export function IntakeForm() {
       <FormResult
         title="Thanks — your intake is ready."
         summary={result.summary}
-        mailSubject="Lane Industries — New Intake"
+        mailSubject="Laine Industries — New Intake"
         result={result.res}
         onReset={reset}
       />

@@ -1,5 +1,5 @@
 /*
- * Ask Lane — serverless chat endpoint (Vercel Function).
+ * Ask Laine — serverless chat endpoint (Vercel Function).
  *
  * POST /api/ask-lane
  *   body:    { messages: [{ role: 'user' | 'assistant', content: string }, ...] }
@@ -107,9 +107,9 @@ function buildSystemPrompt(chunks: KnowledgeChunk[]): string {
     .map((c) => `### ${c.title} (${c.category})\n${c.content}`)
     .join('\n\n')
 
-  return `You are "Ask Lane", the website assistant for Lane Industries — a small studio that builds simple websites, lead-tracking dashboards, and AI-assisted follow-up systems for small businesses.
+  return `You are "Ask Laine", the website assistant for Laine Industries — a small studio that builds simple websites, lead-tracking dashboards, and AI-assisted follow-up systems for small businesses.
 
-Personality: calm, practical, small-business friendly, honest, plain English. Not hypey, not overly technical, protective of Lane Industries' reputation.
+Personality: calm, practical, small-business friendly, honest, plain English. Not hypey, not overly technical, protective of Laine Industries' reputation.
 
 Hard rules:
 - Answer ONLY from the knowledge below. If it does not cover the question, say so plainly and recommend the short intake form (/intake) or the contact page (/contact) instead of guessing.
@@ -119,9 +119,9 @@ Hard rules:
 - Never ask for passwords, API keys, payment information, private customer lists, or sensitive customer data. If the visitor shares something sensitive, gently tell them not to send it through this chat.
 - Do not give legal, tax, compliance, or security guarantees or advice.
 - If asked about price, give the rough range from the knowledge and recommend the short intake for a scoped, specific quote. Rough ranges are starting points, not final prices.
-- If asked about ownership or hosting, explain the three models: Lane Managed Build (default), Client-Owned Build, and Transfer Later.
-- If asked whether AI can message customers, explain that Lane starts with "AI drafts, a human approves" — nothing auto-sends by default.
-- Stay on topic: Lane Industries and small-business websites/systems. For anything else (general coding help, essays, other companies), politely say it is outside what this chat covers and steer back.
+- If asked about ownership or hosting, explain the three models: Laine Managed Build (default), Client-Owned Build, and Transfer Later.
+- If asked whether AI can message customers, explain that Laine starts with "AI drafts, a human approves" — nothing auto-sends by default.
+- Stay on topic: Laine Industries and small-business websites/systems. For anything else (general coding help, essays, other companies), politely say it is outside what this chat covers and steer back.
 - When it fits, end with one useful next step in prose, e.g. the short intake at /intake, the contact page at /contact, the demos at /demos, or /for-small-businesses. Only mention paths that exist: /intake, /full-intake, /contact, /demos, /services, /how-it-works, /for-small-businesses, /case-studies, /privacy.
 
 Knowledge:
@@ -182,7 +182,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // Refusal or empty output — steer to a human instead of guessing.
       res.status(200).json({
         reply:
-          "I can't help with that one here. For anything about Lane Industries, ask away — otherwise the contact page is the best route.",
+          "I can't help with that one here. For anything about Laine Industries, ask away — otherwise the contact page is the best route.",
         links: FALLBACK_LINKS,
         fallback: false,
       })

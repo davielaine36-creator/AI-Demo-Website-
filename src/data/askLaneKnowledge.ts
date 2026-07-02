@@ -1,12 +1,12 @@
 /*
- * Ask Lane knowledge brain.
+ * Ask Laine knowledge brain.
  *
- * Curated, plain-English knowledge chunks the Ask Lane chatbot answers from.
+ * Curated, plain-English knowledge chunks the Ask Laine chatbot answers from.
  * Content is distilled from the site copy (src/data, src/pages) and the
  * business playbook (docs/). Keep it honest: rough price ranges only, no
  * guarantees, no invented client results.
  *
- * To update Ask Lane's answers: edit or add chunks here, keep `keywords`
+ * To update Ask Laine's answers: edit or add chunks here, keep `keywords`
  * generous (they drive retrieval), and keep `content` short enough to read
  * in a chat bubble. No rebuild of anything else is required.
  */
@@ -52,11 +52,12 @@ export const ASK_LANE_KNOWLEDGE: KnowledgeChunk[] = [
   // ── About ──────────────────────────────────────────────────────────────
   {
     id: 'what-lane-does',
-    title: 'What Lane Industries does',
+    title: 'What Laine Industries does',
     category: 'About',
     keywords: [
       'what do you do',
-      'what is lane',
+      'what is laine',
+      'laine industries',
       'about',
       'company',
       'who are you',
@@ -70,16 +71,16 @@ export const ASK_LANE_KNOWLEDGE: KnowledgeChunk[] = [
   },
   {
     id: 'who-lane-is',
-    title: 'Where Lane Industries is based',
+    title: 'Where Laine Industries is based',
     category: 'About',
     keywords: ['where', 'located', 'location', 'san diego', 'california', 'remote', 'local'],
     content:
-      'Lane Industries is based in San Diego / Southern California and works remote-friendly, so location is rarely a blocker. The easiest way to reach us is the contact page or the short intake form.',
+      'Laine Industries is based in San Diego / Southern California and works remote-friendly, so location is rarely a blocker. The easiest way to reach us is the contact page or the short intake form.',
     relatedLinks: [LINKS.contact, LINKS.intake],
   },
   {
     id: 'how-it-works',
-    title: 'How working with Lane works',
+    title: 'How working with Laine works',
     category: 'About',
     keywords: [
       'how does this work',
@@ -96,7 +97,7 @@ export const ASK_LANE_KNOWLEDGE: KnowledgeChunk[] = [
   },
   {
     id: 'why-lane',
-    title: 'Why hire Lane instead of DIY or a traditional web designer',
+    title: 'Why hire Laine instead of DIY or a traditional web designer',
     category: 'About',
     keywords: [
       'why you',
@@ -318,7 +319,7 @@ export const ASK_LANE_KNOWLEDGE: KnowledgeChunk[] = [
   // ── Ownership & Hosting ────────────────────────────────────────────────
   {
     id: 'managed-build',
-    title: 'Lane Managed Build (the default)',
+    title: 'Laine Managed Build (the default)',
     category: 'Ownership & Hosting',
     keywords: [
       'managed build',
@@ -329,7 +330,7 @@ export const ASK_LANE_KNOWLEDGE: KnowledgeChunk[] = [
       'who runs it',
     ],
     content:
-      'By default we do a Lane Managed Build: we build and run the technical system, and you get a live link, a short walkthrough video, and one person to contact when you want a change. You get the working system; we handle the technical plumbing. There is a one-time build fee, plus an optional monthly fee if you want us to keep hosting, supporting, and improving it.',
+      'By default we do a Laine Managed Build: we build and run the technical system, and you get a live link, a short walkthrough video, and one person to contact when you want a change. You get the working system; we handle the technical plumbing. There is a one-time build fee, plus an optional monthly fee if you want us to keep hosting, supporting, and improving it.',
     relatedLinks: [LINKS.howItWorks, LINKS.intake],
   },
   {
@@ -471,7 +472,7 @@ export const ASK_LANE_KNOWLEDGE: KnowledgeChunk[] = [
   // ── Working Together ───────────────────────────────────────────────────
   {
     id: 'what-lane-needs',
-    title: 'What Lane needs from you',
+    title: 'What Laine needs from you',
     category: 'Working Together',
     keywords: [
       'what do you need from me',
@@ -564,7 +565,7 @@ export const ASK_LANE_KNOWLEDGE: KnowledgeChunk[] = [
   // ── Guardrails / expectations ──────────────────────────────────────────
   {
     id: 'no-guarantees',
-    title: 'What Lane will not promise',
+    title: 'What Laine will not promise',
     category: 'Working Together',
     keywords: [
       'guarantee',
@@ -622,6 +623,6 @@ export const ASK_LANE_KNOWLEDGE: KnowledgeChunk[] = [
 
 /**
  * Default chunks used when a question matches nothing — enough to introduce
- * Lane and point at a useful next step.
+ * Laine and point at a useful next step.
  */
 export const DEFAULT_CHUNK_IDS = ['what-lane-does', 'pricing', 'next-steps']

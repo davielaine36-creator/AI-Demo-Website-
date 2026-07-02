@@ -1,5 +1,5 @@
 /*
- * Ask Lane retrieval.
+ * Ask Laine retrieval.
  *
  * Deterministic keyword scoring over the curated knowledge chunks — no
  * embeddings, no external services, easy to review. Used server-side by

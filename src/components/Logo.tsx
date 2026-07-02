@@ -12,7 +12,7 @@ export function Logo({ className = '', onClick }: LogoProps) {
       to="/"
       onClick={onClick}
       className={`inline-flex items-center gap-2.5 ${className}`}
-      aria-label="Lane Industries — home"
+      aria-label="Laine Industries — home"
     >
       <span
         aria-hidden
@@ -30,7 +30,7 @@ export function Logo({ className = '', onClick }: LogoProps) {
         </svg>
       </span>
       <span className="text-lg font-bold tracking-tight text-ink">
-        Lane Industries
+        Laine Industries
       </span>
     </Link>
   )

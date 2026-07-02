@@ -1,6 +1,6 @@
-# Ask Lane — AI Chatbot (v1)
+# Ask Laine — AI Chatbot (v1)
 
-Ask Lane is the site-wide assistant in the bottom-right corner. As of this
+Ask Laine is the site-wide assistant in the bottom-right corner. As of this
 version it is a **real AI chatbot** with a curated knowledge brain and a
 serverless API — plus the original guided quick-start kept as a built-in
 fallback.
@@ -131,14 +131,15 @@ Enforced in the system prompt (`api/ask-lane.ts` → `buildSystemPrompt`):
   data — and tells users not to send them.
 - No legal, tax, compliance, or security guarantees.
 - Pricing answers give rough ranges + intake for a scoped quote; ownership
-  answers explain Lane Managed Build / Client-Owned Build / Transfer Later;
+  answers explain Laine Managed Build / Client-Owned Build / Transfer Later;
   AI-messaging answers lead with "AI drafts, a human approves".
-- Stays on topic (Lane Industries) and politely declines everything else.
+- Stays on topic (Laine Industries) and politely declines everything else.
 
 Enforced in code:
 
-- POST-only; strict payload validation (≤12 messages, ≤1,500 chars each,
-  ≤8,000 total, must end with a user message).
+- POST-only; strict payload validation (≤12 messages; user messages ≤2,000
+  chars, our own assistant replies truncated rather than rejected, ≤24,000
+  chars total, must end with a user message).
 - The API key is read from `process.env` server-side only; the frontend bundle
   contains no Anthropic references (verified in QA).
 - User chat content is never logged — only error class/status on failure.

@@ -77,7 +77,7 @@ export function Footer() {
             © {year} {SITE.name}. All rights reserved.
           </p>
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-400">
-            A Lane Industries System
+            A Laine Industries System
           </p>
         </div>
       </div>

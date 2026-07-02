@@ -444,7 +444,7 @@ export function FullIntakeForm() {
 
     setSubmitting(true)
     const summary = buildSummary(
-      'Lane Industries — Full Intake Summary',
+      'Laine Industries — Full Intake Summary',
       buildSections(),
     )
     const res = await submitForm(form, { formType: 'full-intake', summary })
@@ -464,7 +464,7 @@ export function FullIntakeForm() {
       <FormResult
         title="Thanks — your full intake is ready."
         summary={result.summary}
-        mailSubject="Lane Industries — Full Intake"
+        mailSubject="Laine Industries — Full Intake"
         result={result.res}
         onReset={reset}
       />

@@ -6,12 +6,12 @@ import { IconSparkles, IconClose, IconArrowRight, IconCheck } from './Icons'
 import type { KnowledgeLink } from '../data/askLaneKnowledge'
 
 /*
- * "Ask Lane" — hybrid website concierge.
+ * "Ask Laine" — hybrid website concierge.
  *
  * Two modes:
  *   - Chat: a real AI assistant. Messages go to /api/ask-lane (a serverless
  *     function) which retrieves curated knowledge (src/data/askLaneKnowledge)
- *     and asks Claude to answer in Lane's voice. No AI keys in the browser.
+ *     and asks Claude to answer in Laine's voice. No AI keys in the browser.
  *   - Guided: the original 4-question quick-start, kept as a safe fallback
  *     that works entirely in the browser (and when live chat isn't
  *     configured).
@@ -95,11 +95,11 @@ interface ChatEntry {
 const INTRO_MESSAGE: ChatEntry = {
   role: 'assistant',
   content:
-    "Hi — I'm Ask Lane. Ask me anything about what we build, pricing, hosting, or where to start. Or tap a question below.",
+    "Hi — I'm Ask Laine. Ask me anything about what we build, pricing, hosting, or where to start. Or tap a question below.",
 }
 
 const QUICK_QUESTIONS = [
-  'What does Lane Industries do?',
+  'What does Laine Industries do?',
   'Do I need a website or a system?',
   'How much does this usually cost?',
   'Do I need to manage GitHub or hosting?',
@@ -296,7 +296,7 @@ export function AskLane() {
         className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 rounded-full bg-ink px-4 py-3 text-sm font-semibold text-white shadow-lift transition-transform hover:scale-[1.03] active:scale-95 sm:bottom-6 sm:right-6"
       >
         <IconSparkles className="h-5 w-5 text-brand-300" aria-hidden />
-        Ask Lane
+        Ask Laine
       </button>
 
       {open && (
@@ -304,7 +304,7 @@ export function AskLane() {
           className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4"
           role="dialog"
           aria-modal="true"
-          aria-label="Ask Lane — website assistant"
+          aria-label="Ask Laine — website assistant"
         >
           {/* Backdrop */}
           <div
@@ -325,7 +325,7 @@ export function AskLane() {
                   <IconSparkles className="h-5 w-5" aria-hidden />
                 </span>
                 <div>
-                  <p className="text-sm font-bold text-ink">Ask Lane</p>
+                  <p className="text-sm font-bold text-ink">Ask Laine</p>
                   <p className="text-xs text-slate-500">
                     {mode === 'chat'
                       ? 'AI assistant — services, pricing, next steps'
@@ -349,7 +349,7 @@ export function AskLane() {
                 <div
                   ref={transcriptRef}
                   role="log"
-                  aria-label="Ask Lane conversation"
+                  aria-label="Ask Laine conversation"
                   className="min-h-0 flex-1 space-y-3 overflow-y-auto px-5 py-4 sm:min-h-[16rem]"
                 >
                   {chat.map((entry, i) =>
@@ -387,7 +387,7 @@ export function AskLane() {
                       <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:0ms]" />
                       <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:150ms]" />
                       <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:300ms]" />
-                      <span className="sr-only">Ask Lane is thinking</span>
+                      <span className="sr-only">Ask Laine is thinking</span>
                     </div>
                   )}
 
@@ -454,7 +454,7 @@ export function AskLane() {
                       autoFocus
                       maxLength={1000}
                       placeholder="Ask a question…"
-                      aria-label="Ask Lane a question"
+                      aria-label="Ask Laine a question"
                       className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-ink placeholder:text-slate-400 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500/30"
                     />
                     <Button type="submit" size="sm" disabled={sending || !input.trim()}>

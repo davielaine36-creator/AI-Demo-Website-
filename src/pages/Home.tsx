@@ -72,7 +72,7 @@ export default function Home() {
               businesses.
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-600">
-              Lane Industries builds lightweight systems that help business
+              Laine Industries builds lightweight systems that help business
               owners capture leads, organize customer information, draft
               follow-ups, and stop letting opportunities fall through the cracks.
             </p>
@@ -116,7 +116,7 @@ export default function Home() {
       {/* What we build */}
       <Section muted>
         <SectionHeading
-          eyebrow="What Lane Industries builds"
+          eyebrow="What Laine Industries builds"
           title="Four building blocks. One simple system."
           description="We start with the lightest useful version and only add what earns its place."
           align="center"

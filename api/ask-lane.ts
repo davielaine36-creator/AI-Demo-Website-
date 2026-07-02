@@ -12,8 +12,10 @@
 
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import Anthropic from '@anthropic-ai/sdk'
-import { retrieveKnowledge, collectLinks } from '../src/lib/askLaneRetrieval'
-import type { KnowledgeChunk, KnowledgeLink } from '../src/data/askLaneKnowledge'
+// Explicit .js extensions: the Vercel function is compiled as ESM (package.json
+// "type": "module"), and Node ESM requires them on relative imports at runtime.
+import { retrieveKnowledge, collectLinks } from '../src/lib/askLaneRetrieval.js'
+import type { KnowledgeChunk, KnowledgeLink } from '../src/data/askLaneKnowledge.js'
 
 // One clear default model; override with the optional ASK_LANE_MODEL env var
 // (e.g. "claude-haiku-4-5" for faster/cheaper replies).

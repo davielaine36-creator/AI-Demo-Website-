@@ -28,10 +28,18 @@ Browser renders the reply + recommended page links
 ```
 
 This is **curated retrieval, not vector RAG**: the knowledge base is small
-(~48 hand-written chunks), so deterministic keyword scoring is faster, cheaper,
+(~55 hand-written chunks), so deterministic keyword scoring is faster, cheaper,
 easier to review, and has no external dependencies. There is **no database, no
 Supabase, no Pinecone, no pgvector, no n8n, no auth, no analytics, and no lead
 logging** in this feature.
+
+The most recent expansion added 7 follow-up-topic chunks so prospects can ask
+about **revisions/change requests, client delays and approvals, maintenance vs
+new features, domains and business email, migrating from an existing site/tool,
+refunds and cancellations, and basic SEO/accessibility**. These describe Laine's
+general process only — rough ranges, no guarantees, and no legal/contract advice
+(refund, cancellation, ranking, and compliance questions defer to the written
+agreement or a qualified professional).
 
 ### The pieces
 

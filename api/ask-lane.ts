@@ -31,6 +31,18 @@ const MAX_ASSISTANT_MESSAGE_CHARS = 4000
 const MAX_TOTAL_CHARS = 24000
 const MAX_REPLY_TOKENS = 600
 
+// ── Lightweight preview usage limits (Anthropic cost protection) ──────────
+// No external service and no new env var: limits ride on an HttpOnly cookie,
+// so a determined user can reset them by clearing cookies or switching
+// browsers. That is acceptable for a preview widget; see
+// docs/ask-lane-ai-chatbot.md for the future KV/Upstash upgrade path.
+const FRIENDLY_MAX_CHARS = 1500 // soft cap w/ a friendly reply (input is capped at 1000 client-side)
+const DAILY_LIMIT = 10 // AI messages per browser per 24h
+const DAILY_WINDOW_MS = 24 * 60 * 60 * 1000
+const SPAM_LIMIT = 4 // messages per rolling 60s
+const SPAM_WINDOW_MS = 60 * 1000
+const USAGE_COOKIE = 'al_pv'
+
 interface ChatMessage {
   role: 'user' | 'assistant'
   content: string
@@ -45,6 +57,20 @@ const NOT_CONFIGURED_REPLY =
   'Live AI chat is not configured yet, but you are not stuck: the guided ' +
   'quick-start below can point you to the right starting place, or you can ' +
   'use the short intake form and we will follow up personally.'
+
+const TOO_LONG_REPLY =
+  'That’s a little too much for the preview chat. Try one shorter question, ' +
+  'or use the intake form if you want to share the full context.'
+
+const RATE_LIMIT_REPLY =
+  'You’ve reached the preview chat limit for now. If you’re seriously exploring ' +
+  'a project, the intake form or contact page is the best next step — we’ll use ' +
+  'that to give you a more specific recommendation.'
+
+const SLOW_DOWN_REPLY =
+  'You’re sending questions quickly. Give it a few seconds between messages so ' +
+  'the preview stays reliable. If this is about a real project, the intake form ' +
+  'or contact page is the fastest next step.'
 
 /** Validate the request body into a clean message list, or return null. */
 function parseMessages(body: unknown): ChatMessage[] | null {
@@ -133,12 +159,83 @@ Knowledge:
 ${knowledge}`
 }
 
+interface Usage {
+  w: number // 24h window start (ms since epoch)
+  n: number // AI messages used within the window
+  r: number[] // recent message timestamps (ms), for the spam window
+}
+
+/** Read one cookie value out of the Cookie header. */
+function readCookie(header: string | undefined, name: string): string | null {
+  if (!header) return null
+  for (const part of header.split(';')) {
+    const eq = part.indexOf('=')
+    if (eq !== -1 && part.slice(0, eq).trim() === name) return part.slice(eq + 1).trim()
+  }
+  return null
+}
+
+function readUsage(req: VercelRequest): Usage {
+  const raw = readCookie(req.headers.cookie, USAGE_COOKIE)
+  if (raw) {
+    try {
+      const o = JSON.parse(decodeURIComponent(raw)) as Partial<Usage>
+      if (typeof o.w === 'number' && typeof o.n === 'number' && Array.isArray(o.r)) {
+        return { w: o.w, n: o.n, r: o.r.filter((t): t is number => typeof t === 'number') }
+      }
+    } catch {
+      // ignore a malformed cookie and start a fresh window
+    }
+  }
+  return { w: 0, n: 0, r: [] }
+}
+
+function setUsageCookie(req: VercelRequest, res: VercelResponse, usage: Usage): void {
+  const host = req.headers.host || ''
+  const isLocal = /^(localhost|127\.0\.0\.1)(:|$)/.test(host)
+  const value = encodeURIComponent(JSON.stringify(usage))
+  res.setHeader(
+    'Set-Cookie',
+    `${USAGE_COOKIE}=${value}; Path=/; Max-Age=86400; HttpOnly;${isLocal ? '' : ' Secure;'} SameSite=Lax`,
+  )
+}
+
+/** Cross-site guard: allow only same-origin (the Origin host matching the
+ *  request Host) and localhost for dev. Vercel preview deployments pass because
+ *  the widget calls its own preview host (same-origin). Cross-site POSTs — including
+ *  from a different *.vercel.app project — are rejected. */
+function isAllowedOrigin(req: VercelRequest): boolean {
+  const origin = req.headers.origin
+  if (!origin) return true // non-browser or same-origin request without an Origin header
+  let host: string
+  try {
+    host = new URL(origin).host
+  } catch {
+    return false
+  }
+  if (req.headers.host && host === req.headers.host) return true // same-origin (production + Vercel previews)
+  const bare = host.split(':')[0]
+  return bare === 'localhost' || bare === '127.0.0.1'
+}
+
+/** Friendly limit reply — rendered by the widget as a normal Ask Laine bubble
+ *  (never a technical error). No Anthropic call is made. */
+function limitReply(res: VercelResponse, reply: string): void {
+  res.status(200).json({ reply, links: FALLBACK_LINKS, fallback: false })
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Cache-Control', 'no-store')
 
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST')
     res.status(405).json({ error: 'method_not_allowed' })
+    return
+  }
+
+  // Cross-site protection before any work or Anthropic call.
+  if (!isAllowedOrigin(req)) {
+    res.status(403).json({ error: 'forbidden' })
     return
   }
 
@@ -153,6 +250,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const question = messages[messages.length - 1].content
+
+  // Friendly length guard (the widget already caps input; this backstops it).
+  if (question.length > FRIENDLY_MAX_CHARS) {
+    limitReply(res, TOO_LONG_REPLY)
+    return
+  }
+
   const chunks = retrieveKnowledge(question)
   const links = collectLinks(chunks)
 
@@ -166,6 +270,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     })
     return
   }
+
+  // Preview usage limits — only when a key is set (i.e. calls actually cost).
+  const now = Date.now()
+  const usage = readUsage(req)
+  if (!usage.w || now - usage.w >= DAILY_WINDOW_MS) {
+    usage.w = now
+    usage.n = 0
+  }
+  usage.r = usage.r.filter((t) => now - t < SPAM_WINDOW_MS)
+
+  if (usage.r.length >= SPAM_LIMIT) {
+    setUsageCookie(req, res, usage)
+    limitReply(res, SLOW_DOWN_REPLY)
+    return
+  }
+  if (usage.n >= DAILY_LIMIT) {
+    setUsageCookie(req, res, usage)
+    limitReply(res, RATE_LIMIT_REPLY)
+    return
+  }
+
+  // Count this attempt before the call so failures/retries still count.
+  usage.n += 1
+  usage.r.push(now)
+  setUsageCookie(req, res, usage)
 
   try {
     const anthropic = new Anthropic({ apiKey })

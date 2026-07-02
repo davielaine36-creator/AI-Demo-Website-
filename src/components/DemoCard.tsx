@@ -1,17 +1,21 @@
-import { Link } from 'react-router-dom'
 import { Card } from './Card'
+import { Button } from './Button'
 import { FeatureList } from './FeatureList'
 import { IconArrowRight } from './Icons'
 import { StatusPill } from './demo/StatusPill'
 import type { Demo } from '../data/demos'
 
-const linkClasses =
-  'inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:text-brand-800'
-
 export function DemoCard({ demo }: { demo: Demo }) {
+  const ready = Boolean(demo.to || demo.href)
   return (
     <Card interactive className="flex h-full flex-col">
-      <h3 className="text-lg font-semibold text-ink">{demo.title}</h3>
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="text-lg font-semibold text-ink">{demo.title}</h3>
+        <StatusPill tone={ready ? 'info' : 'neutral'}>
+          {ready ? 'Example data' : 'Coming soon'}
+        </StatusPill>
+      </div>
+
       <p className="mt-2 text-sm leading-relaxed text-slate-600">
         {demo.description}
       </p>
@@ -23,26 +27,22 @@ export function DemoCard({ demo }: { demo: Demo }) {
         <FeatureList items={demo.demonstrates} className="mt-3" />
       </div>
 
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-5">
+      {/* CTA pinned to the bottom so cards line up evenly. */}
+      <div className="mt-auto pt-6">
         {demo.to ? (
-          <>
-            <Link to={demo.to} className={linkClasses}>
-              View the demo <IconArrowRight className="h-4 w-4" aria-hidden />
-            </Link>
-            <StatusPill>Static preview</StatusPill>
-          </>
+          <Button to={demo.to} className="w-full">
+            {demo.cta || 'Open demo'}
+            <IconArrowRight className="h-4 w-4" aria-hidden />
+          </Button>
         ) : demo.href ? (
-          <a
-            href={demo.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={linkClasses}
-          >
-            View demo <IconArrowRight className="h-4 w-4" aria-hidden />
-          </a>
+          <Button href={demo.href} target="_blank" className="w-full">
+            {demo.cta || 'Open demo'}
+            <IconArrowRight className="h-4 w-4" aria-hidden />
+          </Button>
         ) : (
-          // TODO: attach a demo page/link once one exists for this card.
-          <StatusPill>Demo coming soon</StatusPill>
+          <p className="text-center text-sm font-medium text-slate-400">
+            Demo coming soon
+          </p>
         )}
       </div>
     </Card>

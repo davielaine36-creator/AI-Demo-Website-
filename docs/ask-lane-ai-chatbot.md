@@ -155,6 +155,32 @@ telling clients about it.
 
 ---
 
+## Preview usage limits (cost protection)
+
+Because each AI reply costs Anthropic tokens, `api/ask-lane.ts` applies
+**lightweight, no-new-service** limits before ever calling Anthropic:
+
+- **Length:** messages over ~1,500 chars get a friendly "too long" reply (the
+  widget already caps input at 1,000).
+- **Daily cap:** ~10 AI messages per browser per 24 hours.
+- **Spam guard:** at most ~4 messages per rolling 60 seconds.
+- **Origin guard:** POSTs are allowed only from the same origin (the request's
+  `Origin` host matching its `Host`) plus `localhost`/`127.0.0.1` for local dev.
+  Vercel preview deployments keep working because the widget calls its own
+  preview host (same-origin); cross-site POSTs — including from a different
+  `*.vercel.app` project — are rejected.
+
+State rides on a single `HttpOnly; Secure; SameSite=Lax` cookie (`al_pv`) — **no
+database, KV, Redis, auth, or new env var.** When a limit is hit, the endpoint
+returns a friendly message (HTTP 200, rendered as a normal Ask Laine bubble) and
+does **not** call Anthropic. The no-key fallback is unaffected, and the daily/spam
+caps apply only when `ANTHROPIC_API_KEY` is set (i.e. when calls actually cost).
+
+This is deliberately not bulletproof — clearing cookies or switching browsers
+resets it, which is acceptable for a preview widget. **Future upgrade:** move the
+counter to a shared store (Vercel KV or Upstash Redis) keyed by IP + cookie for
+limits that survive cookie clearing, once that trade-off is worth a new service.
+
 ## Future upgrade path (when the knowledge outgrows this)
 
 Curated retrieval is right while the brain is a few dozen chunks. Move to real

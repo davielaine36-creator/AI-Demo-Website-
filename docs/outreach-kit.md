@@ -10,8 +10,8 @@ tweak the details for each business (use their name, their trade, their city).
 - Always end with one small, easy next step (a quick reply, a link, a call).
 - Never invent results, clients, or guarantees. It's fine to say we're early and
   taking on a few pilot builds.
-- Point people to the site: `laneindustries.dev` (intake, demos, contact).
-  - _TODO: Confirm final domain/email. Brand spelling is Laine Industries; avoid using `laneindustries.dev` long-term unless intentionally chosen._
+- Point people to the site: `laineindustries.co` (intake, demos, contact).
+  Public email: `hello@laineindustries.co`.
 
 ---
 
@@ -95,7 +95,7 @@ websites into one simple system — so nothing falls through the cracks.
 
 1. > Hi [Name], just floating this back up — no worries if now's not the time. If
    > it's easier, here's a page showing the kind of systems I build:
-   > laneindustries.dev/demos
+   > laineindustries.co/demos
 
 2. > Hey [Name], totally understand you're busy. If you ever want to stop losing
    > leads to slow follow-up, I'm one message away. Happy to keep it simple.
@@ -109,7 +109,7 @@ websites into one simple system — so nothing falls through the cracks.
 
 5. > Hi [Name], last nudge — we've got room for a couple more pilot builds this
    > month. If [Business] wants in, the intake form takes ~5 min:
-   > laneindustries.dev/intake
+   > laineindustries.co/intake
 
 ---
 
@@ -166,7 +166,7 @@ websites into one simple system — so nothing falls through the cracks.
 
 ## Quick links to drop in messages
 
-- Demos / examples: `laneindustries.dev/demos`
-- Start intake (5 min): `laneindustries.dev/intake`
-- Full questionnaire: `laneindustries.dev/full-intake`
-- Contact: `laneindustries.dev/contact`
+- Demos / examples: `laineindustries.co/demos`
+- Start intake (5 min): `laineindustries.co/intake`
+- Full questionnaire: `laineindustries.co/full-intake`
+- Contact: `laineindustries.co/contact`

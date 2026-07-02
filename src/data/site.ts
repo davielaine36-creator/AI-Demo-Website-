@@ -6,7 +6,7 @@
  * We intentionally do NOT hardcode a personal email in the codebase.
  */
 export const CONTACT_EMAIL: string =
-  import.meta.env.VITE_CONTACT_EMAIL || 'hello@laneindustries.dev'
+  import.meta.env.VITE_CONTACT_EMAIL || 'hello@laineindustries.co'
 
 /**
  * Optional n8n webhook. When present, forms POST their payload here.

@@ -37,13 +37,13 @@ export function buildSummary(
     lines.push('')
   }
 
-  lines.push('— Sent from laneindustries.dev')
+  lines.push('— Sent from laineindustries.co')
   return lines.join('\n')
 }
 
 /**
  * Build a mailto: link with a prefilled subject and body.
- * Uses VITE_CONTACT_EMAIL (falls back to hello@laneindustries.dev).
+ * Uses VITE_CONTACT_EMAIL (falls back to hello@laineindustries.co).
  */
 export function buildMailto(subject: string, body: string): string {
   const params = new URLSearchParams({ subject, body })

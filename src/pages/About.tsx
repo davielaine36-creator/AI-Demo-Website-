@@ -39,7 +39,7 @@ export default function About() {
     <>
       <PageHero
         eyebrow="About"
-        title="A small AI systems studio built by David and Elysio."
+        title="A small AI systems studio built by David and Eliseo."
         subtitle="We help small businesses use modern tools without making things complicated."
       />
 
@@ -48,7 +48,7 @@ export default function About() {
           <SectionHeading
             eyebrow="Who we are"
             title="Practical builders, not a software company."
-            description="Lane Industries is a two-person studio focused on getting real, useful systems into the hands of business owners — the kind that get used every day."
+            description="Laine Industries is a two-person studio focused on getting real, useful systems into the hands of business owners — the kind that get used every day."
           />
           <Card>
             <ul className="space-y-4">

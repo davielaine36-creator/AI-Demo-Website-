@@ -1,4 +1,4 @@
-# Lane Industries — Discovery Call Script
+# Laine Industries — Discovery Call Script
 
 A simple, friendly guide for a 15–20 minute call. Goal: understand their
 business, find the real problem, and recommend the smallest useful next step.

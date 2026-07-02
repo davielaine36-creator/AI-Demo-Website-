@@ -55,7 +55,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
-      {/* Lightweight guided concierge (not a live AI chat). Site-wide. */}
+      {/* Site-wide concierge: AI chat (via /api/ask-lane) + guided fallback. */}
       <AskLane />
       {/* Subtle brand-family watermark (desktop, non-interactive). */}
       <SystemSignature />

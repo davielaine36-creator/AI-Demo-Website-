@@ -14,7 +14,7 @@ const STEPS = [
   {
     title: 'We map the problem',
     description:
-      'Lane Industries identifies where leads, follow-ups, website gaps, or manual work are causing friction.',
+      'Laine Industries identifies where leads, follow-ups, website gaps, or manual work are causing friction.',
   },
   {
     title: 'We recommend a simple system',

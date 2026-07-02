@@ -3,5 +3,8 @@
     "framework": "vite",
     "buildCommand": "npm run build",
     "outputDirectory": "dist",
+    "functions": {
+        "api/ask-lane.ts": { "maxDuration": 30 }
+    },
     "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }

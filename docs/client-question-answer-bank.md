@@ -1,8 +1,8 @@
-# Lane Industries — Client Questions & Plain-English Answers
+# Laine Industries — Client Questions & Plain-English Answers
 
-Founder training + call prep. This is how David and Elysio should *talk* to
+Founder training + call prep. This is how David and Eliseo should *talk* to
 small-business clients — calm, honest, jargon-free, and protective of both sides.
-Read it, practice it out loud, and use the same language so Lane Industries sounds
+Read it, practice it out loud, and use the same language so Laine Industries sounds
 like one company.
 
 > The whole game: **translate, don't explain the stack.** The client is buying
@@ -32,7 +32,7 @@ back with a recommendation. That's literally what consultants do.
 
 ---
 
-## 60-second explanation of Lane Industries
+## 60-second explanation of Laine Industries
 
 > "We help small businesses stop losing leads and time. A lot of owners have
 > customer info scattered across texts, calls, notebooks, and memory — and
@@ -214,7 +214,7 @@ Short, sayable answers. Adapt to the person in front of you.
 > — and we keep it running for you. It's less 'pretty brochure' and more 'stop
 > losing customers.'"
 
-### What makes Lane Industries different?
+### What makes Laine Industries different?
 > "We keep it simple and useful, we explain everything in plain English, we handle
 > the technical side so you don't have to, and we're honest about what will and
 > won't help. We build the smallest thing that solves your real problem first —

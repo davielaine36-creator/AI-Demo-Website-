@@ -1,4 +1,4 @@
-# Lane Industries — Managed Support & Billing Model
+# Laine Industries — Managed Support & Billing Model
 
 How we charge for building and for keeping systems running. The model is simple: a
 one-time fee to build it, and an optional monthly fee to host, support, and improve

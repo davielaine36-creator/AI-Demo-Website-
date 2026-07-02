@@ -1,4 +1,4 @@
-# Lane Industries — Offer Sheet
+# Laine Industries — Offer Sheet
 
 Simple, flexible offers. These are **starting points**, not rigid packages — we
 recommend the smallest useful version first. Prices are **rough ranges** for

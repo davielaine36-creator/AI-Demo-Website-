@@ -19,9 +19,10 @@ export function DemoDisclaimer({
     >
       {children ?? (
         <>
-          This is a static demo built with example data. Nothing on this page
-          is live — no real customers, no messages sent, nothing saved. It
-          shows what a system like this looks like for a small business.
+          This is a front-end demo built with example data. Everything runs in
+          your browser — no real customers, no messages sent, nothing saved or
+          sent anywhere. It shows what a system like this looks like for a small
+          business.
         </>
       )}
     </div>

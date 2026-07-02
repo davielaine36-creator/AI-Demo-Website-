@@ -11,7 +11,7 @@ export default function CaseStudies() {
       <PageHero
         eyebrow="Case Studies / Pilot Builds"
         title="Pilot builds and real-world systems in progress."
-        subtitle="Lane Industries is building practical systems for real businesses and documenting the before, build, and after of each project."
+        subtitle="Laine Industries is building practical systems for real businesses and documenting the before, build, and after of each project."
       />
 
       <Section>

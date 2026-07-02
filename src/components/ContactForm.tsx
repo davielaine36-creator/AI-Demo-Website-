@@ -65,7 +65,7 @@ export function ContactForm() {
     }
 
     setSubmitting(true)
-    const summary = buildSummary('Lane Industries — Contact Message', [
+    const summary = buildSummary('Laine Industries — Contact Message', [
       {
         heading: 'Contact',
         fields: [
@@ -102,7 +102,7 @@ export function ContactForm() {
       <FormResult
         title="Thanks for reaching out."
         summary={result.summary}
-        mailSubject="Lane Industries — Contact"
+        mailSubject="Laine Industries — Contact"
         result={result.res}
         onReset={reset}
       />

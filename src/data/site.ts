@@ -16,7 +16,7 @@ export const N8N_INTAKE_WEBHOOK_URL: string | undefined =
   import.meta.env.VITE_N8N_INTAKE_WEBHOOK_URL
 
 export const SITE = {
-  name: 'Lane Industries',
+  name: 'Laine Industries',
   tagline:
     'Simple websites, CRM dashboards, and AI follow-up systems for small businesses.',
   message:

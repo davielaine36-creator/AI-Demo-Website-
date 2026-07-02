@@ -1,4 +1,4 @@
-# Lane Industries — Outreach Kit
+# Laine Industries — Outreach Kit
 
 Plain-English messages for reaching out to small businesses. Copy, paste, and
 tweak the details for each business (use their name, their trade, their city).
@@ -11,6 +11,7 @@ tweak the details for each business (use their name, their trade, their city).
 - Never invent results, clients, or guarantees. It's fine to say we're early and
   taking on a few pilot builds.
 - Point people to the site: `laneindustries.dev` (intake, demos, contact).
+  - _TODO: Confirm final domain/email. Brand spelling is Laine Industries; avoid using `laneindustries.dev` long-term unless intentionally chosen._
 
 ---
 
@@ -21,7 +22,7 @@ websites into one simple system — so nothing falls through the cracks.
 
 ---
 
-## 5 plain-English explanations of what Lane Industries does
+## 5 plain-English explanations of what Laine Industries does
 
 1. We build simple websites that clearly explain what a business does and make it
    easy for customers to reach out.

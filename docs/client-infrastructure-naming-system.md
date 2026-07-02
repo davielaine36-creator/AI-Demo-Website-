@@ -1,4 +1,4 @@
-# Lane Industries — Client Infrastructure Naming System
+# Laine Industries — Client Infrastructure Naming System
 
 One consistent way to name everything for a client, everywhere. When names match
 across GitHub, Vercel, Supabase, n8n, Drive, and paperwork, nothing gets lost and
@@ -20,7 +20,7 @@ LI-0002-window-service-dashboard
 LI-0003-shopify-store-automation
 ```
 
-- **`LI`** — Lane Industries prefix (constant).
+- **`LI`** — Laine Industries prefix (constant).
 - **`0001`** — zero-padded client/project number, assigned in order, never reused.
 - **`readable-kebab-name`** — lowercase, hyphenated: `client-thing` describing the
   business + what the system is.

@@ -1,6 +1,6 @@
-# Lane Industries — Scope Boundaries
+# Laine Industries — Scope Boundaries
 
-Plain-English rules that keep client work clean and protect Lane Industries. These
+Plain-English rules that keep client work clean and protect Laine Industries. These
 aren't about being rigid — they're about being clear, so projects stay friendly
 and finish on time. Share the relevant parts with clients up front; it builds
 trust and prevents awkward conversations later.

@@ -38,9 +38,8 @@ of system you build**, never as finished case studies with fake results.
 - **Say:** "One of our pilots is a training company — website cleanup, course
   info, and follow-up reminders so student inquiries don't slip."
 - **Don't say:** "We increased their revenue by X%" or anything you can't back up.
-- Point people to `laneindustries.dev/case-studies` and note they're pilots in
+- Point people to `laineindustries.co/case-studies` and note they're pilots in
   progress — being early and honest is a selling point, not a weakness.
-  - _TODO: Confirm final domain/email. Brand spelling is Laine Industries; avoid using `laneindustries.dev` long-term unless intentionally chosen._
 
 As real outcomes appear, update the case-study docs and use those numbers.
 

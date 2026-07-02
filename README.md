@@ -69,7 +69,7 @@ Variables). All client-exposed vars **must** be prefixed with `VITE_`.
 
 | Variable                      | Required | Description                                                                 |
 | ----------------------------- | -------- | --------------------------------------------------------------------------- |
-| `VITE_CONTACT_EMAIL`          | No       | Email used for `mailto:` fallbacks. Defaults to `hello@laneindustries.dev`. |
+| `VITE_CONTACT_EMAIL`          | No       | Email used for `mailto:` fallbacks. Defaults to `hello@laineindustries.co`. |
 | `VITE_N8N_INTAKE_WEBHOOK_URL` | No       | If set, intake + contact forms `POST` their payload to this webhook.        |
 | `ANTHROPIC_API_KEY`           | For live AI chat | **Server-side only — never `VITE_`-prefixed.** Powers the Ask Laine chatbot. Without it, Ask Laine falls back to the guided quick-start. |
 | `ASK_LANE_MODEL`              | No       | Optional model override for Ask Laine (default `claude-opus-4-8`).           |
@@ -103,7 +103,7 @@ On submit, both forms build a clean formatted summary and:
 - `POST` it to `VITE_N8N_INTAKE_WEBHOOK_URL` if that env var is set;
 - otherwise (or if the webhook fails) fall back to **copy-to-clipboard** and a
   **prefilled email draft** to `VITE_CONTACT_EMAIL` (default
-  `hello@laneindustries.dev`). Nothing is ever lost.
+  `hello@laineindustries.co`). Nothing is ever lost.
 
 ## Adding the intake PDF
 

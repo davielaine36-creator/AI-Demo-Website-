@@ -28,7 +28,7 @@ Browser renders the reply + recommended page links
 ```
 
 This is **curated retrieval, not vector RAG**: the knowledge base is small
-(~30 hand-written chunks), so deterministic keyword scoring is faster, cheaper,
+(~48 hand-written chunks), so deterministic keyword scoring is faster, cheaper,
 easier to review, and has no external dependencies. There is **no database, no
 Supabase, no Pinecone, no pgvector, no n8n, no auth, no analytics, and no lead
 logging** in this feature.

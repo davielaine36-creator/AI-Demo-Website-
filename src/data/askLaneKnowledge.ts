@@ -656,7 +656,7 @@ export const ASK_LANE_KNOWLEDGE: KnowledgeChunk[] = [
       'paid before',
     ],
     content:
-      'For most projects, Laine Industries should collect a deposit before build work begins. A common structure is deposit first, then the remaining balance before launch, handoff, or transfer. The exact payment schedule depends on the project size and proposal. This helps reserve time, confirms the client is serious, and prevents unclear expectations. Monthly support is separate from the one-time build fee unless the proposal says otherwise. Final payment terms should always be confirmed in the proposal or written agreement.',
+      'Most projects require a deposit before build work begins, with the remaining balance due according to the proposal or written agreement. The exact payment schedule depends on the project size, timeline, and scope. Monthly support is separate from the one-time build fee unless the proposal says otherwise.',
     relatedLinks: [LINKS.intake, LINKS.contact],
   },
   {
@@ -711,7 +711,7 @@ export const ASK_LANE_KNOWLEDGE: KnowledgeChunk[] = [
       'finished project',
     ],
     content:
-      'At handoff, the client should receive the working website, form, dashboard, automation, or system that was agreed in the proposal. Laine Industries should also provide a simple explanation of what was built, how to use it, important links, any access notes, and next steps. For many projects, a short walkthrough video or written instructions are helpful. Handoff is also where monthly support options can be discussed if the client wants ongoing help after launch.',
+      'At handoff, Laine Industries normally provides the completed items listed in the approved proposal, along with simple instructions, important links, and next steps. Depending on the project, this may include a walkthrough video, written instructions, or a support recommendation.',
     relatedLinks: [LINKS.howItWorks, LINKS.contact],
   },
   {
@@ -729,7 +729,7 @@ export const ASK_LANE_KNOWLEDGE: KnowledgeChunk[] = [
       'business day',
     ],
     content:
-      'Laine Industries is not a 24/7 emergency IT department unless that is specifically scoped and priced. A normal support expectation is a reasonable business response window, often around one business day for standard requests. Urgent issues can be prioritized when they affect a live form, website, or important workflow, but support does not mean unlimited instant access. Response times, support hours, and what counts as urgent should be confirmed in the support plan or agreement.',
+      'Standard support is not 24/7 emergency IT support unless that is specifically agreed in writing. Typical response expectations are handled during business days, often around one business day for normal requests. Exact response times and urgent-support rules should be confirmed in the support plan.',
     relatedLinks: [LINKS.contact, LINKS.services],
   },
   {
@@ -765,7 +765,7 @@ export const ASK_LANE_KNOWLEDGE: KnowledgeChunk[] = [
       'external service',
     ],
     content:
-      'Some parts of a client system depend on third-party platforms like hosting providers, Shopify, email tools, domain providers, payment tools, or automation services. Laine Industries can set up and manage the system carefully, but we cannot control every outage, policy change, billing issue, API change, or limitation from those platforms. If a third-party service changes or breaks something, Laine Industries can help troubleshoot or recommend next steps, but those limits should be understood upfront.',
+      'Some systems depend on third-party platforms like hosting, Shopify, email tools, domain providers, or automation services. Laine Industries can help configure and troubleshoot those systems, but third-party outages, billing issues, policy changes, API changes, or service limitations may be outside our control.',
     relatedLinks: [LINKS.contact, LINKS.privacy],
   },
   {
@@ -909,7 +909,7 @@ export const ASK_LANE_KNOWLEDGE: KnowledgeChunk[] = [
       'cancellation',
     ],
     content:
-      'Laine Industries can explain the general business process around proposals, scope, payment, support, and handoff, but Ask Laine should not provide legal advice. Formal contract language should be reviewed by a qualified attorney, especially around ownership, liability, payment terms, data handling, cancellation, and transfer. For simple projects, the goal is still to have clear written expectations. Legal documents should clarify the relationship; they should not replace a real conversation about what is being built.',
+      'Ask Laine can explain Laine Industries’ general project process — proposals, scope, deposits, kickoff, handoff, and support — but it cannot interpret contract terms or provide legal advice. Final agreement language should be reviewed by a qualified attorney when needed.',
     relatedLinks: [LINKS.contact, LINKS.intake],
   },
 ]

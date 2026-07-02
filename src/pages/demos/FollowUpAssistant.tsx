@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageHero } from '../../components/PageHero'
 import { Section, SectionHeading } from '../../components/Section'
@@ -7,32 +8,92 @@ import { DemoDisclaimer } from '../../components/demo/DemoDisclaimer'
 import { StatusPill } from '../../components/demo/StatusPill'
 import { CTA } from '../../data/site'
 
-// Example scenario only — the customer and owner are fictional.
-const SCENARIO = [
-  { label: 'Customer', value: 'Jordan Ellis (example customer)' },
-  { label: 'Request', value: 'Fence repair quote — back yard, two leaning posts' },
-  { label: 'Came in', value: 'Tuesday, 8:42 AM' },
-  { label: 'Status', value: 'No reply sent yet' },
-]
+interface Draft {
+  title: string
+  timing: string
+  message: string
+}
 
-const DRAFTS = [
+interface Scenario {
+  id: string
+  label: string
+  customer: string
+  request: string
+  waiting: string
+  drafts: Draft[]
+}
+
+// Every scenario, customer, and draft below is fictional and pre-written.
+// There is no AI call here — the "drafts" are curated example text.
+const SCENARIOS: Scenario[] = [
   {
-    title: 'Friendly first reply',
-    timing: 'Suggested for the same day',
-    message:
-      "Hi Jordan — thanks for reaching out about your fence repair. I'd like to take a quick look at the two posts so I can give you an accurate quote. Would tomorrow morning or Thursday afternoon work for a short visit? — Sam",
+    id: 'fence-no-reply',
+    label: 'Fence repair · no reply (2 days)',
+    customer: 'Jordan Ellis',
+    request: 'Fence repair quote — back yard, two leaning posts',
+    waiting: 'Waiting 2 days',
+    drafts: [
+      {
+        title: 'Friendly first reply',
+        timing: 'Suggested for the same day',
+        message:
+          "Hi Jordan — thanks for reaching out about your fence repair. I'd like to take a quick look at the two posts so I can give you an accurate quote. Would tomorrow morning or Thursday afternoon work for a short visit? — Sam",
+      },
+      {
+        title: 'Next-day follow-up',
+        timing: 'Suggested if there is no response',
+        message:
+          "Hi Jordan — just checking in on your fence repair request. If it's easier, a photo of the leaning posts is usually enough for me to give you a rough price range the same day. No rush if plans have changed. — Sam",
+      },
+      {
+        title: 'Estimate reminder',
+        timing: 'Suggested after the estimate goes out',
+        message:
+          "Hi Jordan — wanted to make sure the estimate I sent over came through okay. Happy to answer questions or adjust the scope if you'd like. And if now isn't the right time, that's completely fine too. — Sam",
+      },
+    ],
   },
   {
-    title: 'Next-day follow-up',
-    timing: 'Suggested if there is no response',
-    message:
-      "Hi Jordan — just checking in on your fence repair request. If it's easier, a photo of the leaning posts is usually enough for me to give you a rough price range the same day. No rush if plans have changed. — Sam",
+    id: 'gutter-new',
+    label: 'Gutter cleaning · brand-new inquiry',
+    customer: 'Priya Nair',
+    request: 'Gutter cleaning — single-story, storefront',
+    waiting: 'Came in 20 minutes ago',
+    drafts: [
+      {
+        title: 'Fast acknowledgement',
+        timing: 'Suggested right away',
+        message:
+          "Hi Priya — thanks for the gutter cleaning request for your storefront. I can usually get single-story jobs scheduled within the week. Is the storefront easy to access from the front, or is there a back alley? — Sam",
+      },
+      {
+        title: 'Quick quote + scheduling',
+        timing: 'Suggested once you have the details',
+        message:
+          "Hi Priya — for a single-story storefront that's typically in the $X–$Y range depending on buildup and access. If that sounds fine, I have Wednesday or Friday morning open this week. Want me to hold one? — Sam",
+      },
+    ],
   },
   {
-    title: 'Estimate reminder',
-    timing: 'Suggested after the estimate goes out',
-    message:
-      "Hi Jordan — wanted to make sure the estimate I sent over came through okay. Happy to answer questions or adjust the scope if you'd like. And if now isn't the right time, that's completely fine too. — Sam",
+    id: 'deck-estimate-sent',
+    label: 'Deck repair · estimate sent, gone quiet',
+    customer: 'Marcus Webb',
+    request: 'Deck repair — replace 4 boards, re-stain',
+    waiting: 'Estimate sent 5 days ago',
+    drafts: [
+      {
+        title: 'Low-pressure check-in',
+        timing: 'Suggested 4–6 days after the estimate',
+        message:
+          "Hi Marcus — just circling back on the deck estimate. No pressure at all — I know these decisions take time. If it helps, I'm happy to walk through the line items or adjust the scope. — Sam",
+      },
+      {
+        title: 'Offer a smaller first step',
+        timing: 'Suggested if budget might be the holdup',
+        message:
+          "Hi Marcus — if the full deck repair is more than you want to take on right now, we could start with just the four boards and leave the re-stain for later. Want me to put together a smaller option? — Sam",
+      },
+    ],
   },
 ]
 
@@ -56,51 +117,94 @@ const WHY_DRAFTS = [
 ]
 
 export default function FollowUpAssistantDemo() {
+  const [scenarioId, setScenarioId] = useState<string>(SCENARIOS[0].id)
+  const [copiedKey, setCopiedKey] = useState<string | null>(null)
+
+  const scenario = SCENARIOS.find((s) => s.id === scenarioId) ?? SCENARIOS[0]
+
+  const copyDraft = async (key: string, text: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopiedKey(key)
+      window.setTimeout(() => setCopiedKey((k) => (k === key ? null : k)), 2000)
+    } catch {
+      // Clipboard may be unavailable (e.g. insecure context) — fail quietly;
+      // this is a demo and nothing depends on the copy succeeding.
+    }
+  }
+
   return (
     <>
       <PageHero
         eyebrow="Demo · Follow-up assistant"
         title="AI-assisted follow-up, without letting AI message your customers."
-        subtitle="A static preview of how AI can draft follow-up messages for a business owner to review, edit, and send. Drafts only — a human approves everything."
+        subtitle="An interactive preview: pick a lead scenario and see the follow-up drafts an assistant might suggest. Drafts only — you review, edit, and send. Nothing is generated live and nothing is sent."
       >
-        <StatusPill tone="info">Static demo</StatusPill>
-        <StatusPill>Example data only</StatusPill>
+        <StatusPill tone="info">Interactive demo</StatusPill>
+        <StatusPill>Mock drafts — no live AI</StatusPill>
         <StatusPill>No messages are sent</StatusPill>
       </PageHero>
 
-      {/* The scenario */}
+      {/* Pick a scenario */}
       <Section>
         <SectionHeading
-          eyebrow="The scenario"
-          title="A quote request is waiting on a reply."
-          description="It's the most common way small businesses lose work: someone asks for a quote, the day gets busy, and the reply never happens."
+          eyebrow="Step 1 — Pick a scenario"
+          title="Choose a lead that's waiting on a reply."
+          description="These are common ways small businesses lose work: someone asks for a quote, the day gets busy, and the follow-up never happens. Pick one to see suggested drafts."
           align="center"
           className="mb-10"
         />
+        <div className="mx-auto mb-8 flex max-w-3xl flex-wrap justify-center gap-2">
+          {SCENARIOS.map((s) => {
+            const active = s.id === scenarioId
+            return (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => setScenarioId(s.id)}
+                aria-pressed={active}
+                className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                  active
+                    ? 'border-brand-300 bg-brand-50 text-brand-700'
+                    : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50'
+                }`}
+              >
+                {s.label}
+              </button>
+            )
+          })}
+        </div>
         <Card className="mx-auto max-w-xl">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h3 className="text-base font-semibold text-ink">
-              Open quote request
-            </h3>
+            <h3 className="text-base font-semibold text-ink">Open quote request</h3>
             <div className="flex flex-wrap gap-2">
-              <StatusPill tone="warn">Waiting 2 days</StatusPill>
+              <StatusPill tone="warn">{scenario.waiting}</StatusPill>
               <StatusPill tone="info">Follow-up suggested</StatusPill>
             </div>
           </div>
           <dl className="mt-5 space-y-3 border-t border-slate-100 pt-5">
-            {SCENARIO.map((row) => (
-              <div key={row.label} className="flex gap-4 text-sm">
-                <dt className="w-24 flex-shrink-0 font-semibold text-slate-500">
-                  {row.label}
-                </dt>
-                <dd className="leading-relaxed text-slate-700">{row.value}</dd>
-              </div>
-            ))}
+            <div className="flex gap-4 text-sm">
+              <dt className="w-24 flex-shrink-0 font-semibold text-slate-500">
+                Customer
+              </dt>
+              <dd className="leading-relaxed text-slate-700">
+                {scenario.customer}{' '}
+                <span className="text-slate-400">(example customer)</span>
+              </dd>
+            </div>
+            <div className="flex gap-4 text-sm">
+              <dt className="w-24 flex-shrink-0 font-semibold text-slate-500">
+                Request
+              </dt>
+              <dd className="leading-relaxed text-slate-700">
+                {scenario.request}
+              </dd>
+            </div>
           </dl>
           <p className="mt-5 rounded-xl bg-brand-50 px-4 py-3 text-sm leading-relaxed text-brand-800">
-            <span className="font-semibold">System suggestion:</span> it has
-            been two days with no reply. Here are three drafts — review, edit,
-            and send the one that fits, or ignore them all.
+            <span className="font-semibold">System suggestion:</span> here are a
+            few drafts — copy the one that fits, edit it wherever you already
+            message customers, and send it yourself. Or ignore them all.
           </p>
         </Card>
       </Section>
@@ -108,52 +212,54 @@ export default function FollowUpAssistantDemo() {
       {/* The drafts */}
       <Section muted>
         <SectionHeading
-          eyebrow="The drafts"
-          title="AI writes the first draft. The owner has the final say."
-          description="Each draft is a starting point, written in a plain, friendly voice. Nothing goes out until the owner reads it and hits send."
+          eyebrow="Step 2 — The drafts"
+          title="AI writes the first draft. You have the final say."
+          description="Each draft is a starting point in a plain, friendly voice. Copy one to use it — then read it, make it yours, and send it when you're ready."
           align="center"
           className="mb-10"
         />
         <div className="grid gap-6 lg:grid-cols-3">
-          {DRAFTS.map((draft) => (
-            <Card key={draft.title} className="flex h-full flex-col">
-              <div className="flex flex-wrap gap-2">
-                <StatusPill>Draft only</StatusPill>
-                <StatusPill tone="warn">Human review required</StatusPill>
-                <StatusPill>Not auto-sent</StatusPill>
-              </div>
-              <h3 className="mt-4 text-base font-semibold text-ink">
-                {draft.title}
-              </h3>
-              <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                {draft.timing}
-              </p>
-              <p className="mt-4 flex-1 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-relaxed text-slate-700">
-                {draft.message}
-              </p>
-              <div className="mt-4 flex gap-2 border-t border-slate-100 pt-4">
-                <button
-                  type="button"
-                  disabled
-                  className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-semibold text-slate-500 disabled:cursor-not-allowed"
-                >
-                  Edit draft
-                </button>
-                <button
-                  type="button"
-                  disabled
-                  className="rounded-full bg-slate-200 px-4 py-1.5 text-xs font-semibold text-slate-500 disabled:cursor-not-allowed"
-                >
-                  Approve &amp; send
-                </button>
-              </div>
-            </Card>
-          ))}
+          {scenario.drafts.map((draft, i) => {
+            const key = `${scenario.id}-${i}`
+            const copied = copiedKey === key
+            return (
+              <Card key={key} className="flex h-full flex-col">
+                <div className="flex flex-wrap gap-2">
+                  <StatusPill>Draft only</StatusPill>
+                  <StatusPill tone="warn">Human review required</StatusPill>
+                  <StatusPill>Not auto-sent</StatusPill>
+                </div>
+                <h3 className="mt-4 text-base font-semibold text-ink">
+                  {draft.title}
+                </h3>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  {draft.timing}
+                </p>
+                <p className="mt-4 flex-1 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-relaxed text-slate-700">
+                  {draft.message}
+                </p>
+                <div className="mt-4 border-t border-slate-100 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => copyDraft(key, draft.message)}
+                    aria-live="polite"
+                    className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
+                      copied
+                        ? 'bg-emerald-600 text-white'
+                        : 'bg-ink text-white hover:bg-ink-soft'
+                    }`}
+                  >
+                    {copied ? 'Copied ✓' : 'Copy draft'}
+                  </button>
+                </div>
+              </Card>
+            )
+          })}
         </div>
         <p className="mx-auto mt-8 max-w-2xl text-center text-sm leading-relaxed text-slate-500">
-          The buttons are part of the illustration — nothing can be sent from
-          this page. In a real build, the owner reviews and sends from wherever
-          they already work.
+          Copy places the draft on your clipboard so you can paste it wherever
+          you already talk to customers. Nothing is generated live and nothing
+          is sent from this page.
         </p>
       </Section>
 
@@ -195,8 +301,8 @@ export default function FollowUpAssistantDemo() {
             className="font-semibold text-brand-700 hover:text-brand-800"
           >
             Contact us
-          </Link>
-          {' '}·{' '}
+          </Link>{' '}
+          ·{' '}
           <Link
             to="/demos"
             className="font-semibold text-brand-700 hover:text-brand-800"

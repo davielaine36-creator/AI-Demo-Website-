@@ -128,6 +128,13 @@ export function AskLane() {
   const [chatError, setChatError] = useState(false)
   const [aiUnavailable, setAiUnavailable] = useState(false)
   const transcriptRef = useRef<HTMLDivElement>(null)
+  const launcherRef = useRef<HTMLButtonElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const abortRef = useRef<AbortController | null>(null)
+  // Bumped on every send and on reset; a resolving fetch whose id is stale is
+  // ignored, so a superseded or reset conversation never absorbs its reply.
+  const requestIdRef = useRef(0)
 
   // Guided-flow state.
   const [step, setStep] = useState(0)
@@ -143,19 +150,49 @@ export function AskLane() {
     setOpen(false)
   }, [location.pathname])
 
-  // Lock background scroll + allow Esc to close while open.
+  // While open: lock background scroll, close on Esc, trap Tab within the
+  // panel, and restore focus to the launcher on close.
   useEffect(() => {
     if (!open) return
+    const launcher = launcherRef.current
     document.body.style.overflow = 'hidden'
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false)
+      if (e.key === 'Escape') {
+        setOpen(false)
+        return
+      }
+      if (e.key !== 'Tab') return
+      const panel = panelRef.current
+      if (!panel) return
+      const focusable = panel.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      )
+      if (focusable.length === 0) return
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      const active = document.activeElement as HTMLElement | null
+      if (e.shiftKey) {
+        if (active === first || !panel.contains(active)) {
+          last.focus()
+          e.preventDefault()
+        }
+      } else if (active === last || !panel.contains(active)) {
+        first.focus()
+        e.preventDefault()
+      }
     }
+
     window.addEventListener('keydown', onKey)
     return () => {
       document.body.style.overflow = ''
       window.removeEventListener('keydown', onKey)
+      launcher?.focus()
     }
   }, [open])
+
+  // Abort any in-flight request if the widget unmounts.
+  useEffect(() => () => abortRef.current?.abort(), [])
 
   // Keep the newest chat message in view.
   useEffect(() => {
@@ -172,6 +209,9 @@ export function AskLane() {
   }
 
   const openAssistant = () => {
+    // Discard any in-flight request so its reply can't land in the new session.
+    abortRef.current?.abort()
+    requestIdRef.current += 1
     resetGuided()
     setChat([INTRO_MESSAGE])
     setInput('')
@@ -190,23 +230,35 @@ export function AskLane() {
     setInput('')
     setChatError(false)
     setSending(true)
+    // Move focus off a quick-question button (it unmounts) onto the input.
+    inputRef.current?.focus()
+
+    abortRef.current?.abort()
+    const controller = new AbortController()
+    abortRef.current = controller
+    const reqId = (requestIdRef.current += 1)
+    const isStale = () => requestIdRef.current !== reqId
 
     try {
-      // Skip the static intro bubble; send only real conversation turns.
+      // Skip the static intro bubble; send only real conversation turns, and
+      // drop any leading assistant turn so the API sees a user-first sequence.
       const payload = nextChat
         .slice(1)
         .slice(-HISTORY_LIMIT)
         .map(({ role, content }) => ({ role, content }))
+      while (payload.length > 0 && payload[0].role === 'assistant') payload.shift()
 
       const res = await fetch('/api/ask-lane', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: payload }),
+        signal: controller.signal,
       })
       if (!res.ok) throw new Error(`ask-lane status ${res.status}`)
 
       const data = (await res.json()) as AskLaneResponse
       if (typeof data.reply !== 'string') throw new Error('malformed reply')
+      if (isStale()) return // conversation was reset or superseded — ignore.
 
       setChat((prev) => [
         ...prev,
@@ -214,9 +266,10 @@ export function AskLane() {
       ])
       if (data.fallback) setAiUnavailable(true)
     } catch {
+      if (controller.signal.aborted || isStale()) return
       setChatError(true)
     } finally {
-      setSending(false)
+      if (!isStale()) setSending(false)
     }
   }
 
@@ -235,6 +288,7 @@ export function AskLane() {
     <>
       {/* Floating launcher */}
       <button
+        ref={launcherRef}
         type="button"
         onClick={openAssistant}
         aria-haspopup="dialog"
@@ -260,9 +314,12 @@ export function AskLane() {
           />
 
           {/* Panel */}
-          <div className="relative flex max-h-[88vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-lift sm:max-w-md sm:rounded-2xl">
+          <div
+            ref={panelRef}
+            className="relative flex max-h-[88dvh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-lift sm:max-w-md sm:rounded-2xl"
+          >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+            <div className="flex shrink-0 items-center justify-between border-b border-slate-100 px-5 py-4">
               <div className="flex items-center gap-2.5">
                 <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand-50 text-brand-600">
                   <IconSparkles className="h-5 w-5" aria-hidden />
@@ -291,8 +348,9 @@ export function AskLane() {
               <>
                 <div
                   ref={transcriptRef}
-                  aria-live="polite"
-                  className="min-h-[16rem] flex-1 space-y-3 overflow-y-auto px-5 py-4"
+                  role="log"
+                  aria-label="Ask Lane conversation"
+                  className="min-h-0 flex-1 space-y-3 overflow-y-auto px-5 py-4 sm:min-h-[16rem]"
                 >
                   {chat.map((entry, i) =>
                     entry.role === 'user' ? (
@@ -312,6 +370,7 @@ export function AskLane() {
                               <Link
                                 key={link.to}
                                 to={link.to}
+                                onClick={() => setOpen(false)}
                                 className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700 hover:border-brand-300 hover:bg-brand-100"
                               >
                                 {link.label}
@@ -336,11 +395,19 @@ export function AskLane() {
                     <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-relaxed text-amber-900">
                       Sorry — something went wrong answering that. You can try
                       again, or head straight to the{' '}
-                      <Link to="/intake" className="font-semibold underline">
+                      <Link
+                        to="/intake"
+                        onClick={() => setOpen(false)}
+                        className="font-semibold underline"
+                      >
                         short intake
                       </Link>{' '}
                       or{' '}
-                      <Link to="/contact" className="font-semibold underline">
+                      <Link
+                        to="/contact"
+                        onClick={() => setOpen(false)}
+                        className="font-semibold underline"
+                      >
                         contact page
                       </Link>{' '}
                       and we'll follow up personally.
@@ -377,9 +444,10 @@ export function AskLane() {
                 </div>
 
                 {/* Composer */}
-                <div className="border-t border-slate-100 px-5 py-3">
+                <div className="shrink-0 border-t border-slate-100 px-5 py-3">
                   <form onSubmit={onSubmit} className="flex items-center gap-2">
                     <input
+                      ref={inputRef}
                       type="text"
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
@@ -394,7 +462,7 @@ export function AskLane() {
                     </Button>
                   </form>
                   <div className="mt-2 flex items-center justify-between gap-3">
-                    <p className="text-[11px] leading-snug text-slate-400">
+                    <p className="text-[11px] leading-snug text-slate-500">
                       AI assistant — answers can contain mistakes. Please do not
                       send passwords, payment information, API keys, or
                       sensitive customer data.

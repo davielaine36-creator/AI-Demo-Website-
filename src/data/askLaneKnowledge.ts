@@ -447,7 +447,7 @@ export const ASK_LANE_KNOWLEDGE: KnowledgeChunk[] = [
       'what happens if i stop',
     ],
     content:
-      'The original build and handoff are separate from ongoing support. If the monthly plan stops, we pause updates, monitoring, troubleshooting, and managed hosting — after a reminder and a friendly grace period, never as a surprise. Your data and paid-for work are not held hostage: once invoices are current, we help you export or transfer the system, and restoring service after payment is prompt.',
+      'The original build and handoff are separate from ongoing support. If the monthly plan stops, we pause updates, monitoring, troubleshooting, and managed hosting — after a reminder and a friendly grace period, never as a surprise. Your data and paid-for work are not held hostage: once invoices are current, we help you export or transfer the system, and restoring service after payment is prompt (a small reactivation fee may apply).',
     relatedLinks: [LINKS.contact, LINKS.howItWorks],
   },
   {
@@ -540,7 +540,7 @@ export const ASK_LANE_KNOWLEDGE: KnowledgeChunk[] = [
       'sample',
     ],
     content:
-      'The demos are honest, static examples built with example data — no real customers, nothing live, nothing saved or sent. They show what a lead capture system, an AI follow-up assistant (drafts with human review), and a small-business dashboard look like in practice, so you can picture the system before anything is built.',
+      'The demos are honest, static examples built with example data — no real customers, nothing live, nothing saved or sent. They show what a lead capture system, an AI follow-up assistant (drafts with human review), a small-business dashboard, and a Shopify operations helper look like in practice, so you can picture the system before anything is built.',
     relatedLinks: [LINKS.demos, LINKS.followUpDemo],
   },
   {

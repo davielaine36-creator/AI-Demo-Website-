@@ -19,10 +19,14 @@ import type { KnowledgeChunk, KnowledgeLink } from '../src/data/askLaneKnowledge
 // (e.g. "claude-haiku-4-5" for faster/cheaper replies).
 const DEFAULT_MODEL = 'claude-opus-4-8'
 
-// Payload limits — chat questions are short; anything bigger is rejected.
+// Payload limits. User turns are untrusted input and are rejected when over
+// the cap; assistant turns are our OWN prior replies echoed back by the client,
+// so we truncate them (a reply near MAX_REPLY_TOKENS can exceed a tight cap)
+// rather than 400 the whole conversation.
 const MAX_MESSAGES = 12
-const MAX_MESSAGE_CHARS = 1500
-const MAX_TOTAL_CHARS = 8000
+const MAX_USER_MESSAGE_CHARS = 2000
+const MAX_ASSISTANT_MESSAGE_CHARS = 4000
+const MAX_TOTAL_CHARS = 24000
 const MAX_REPLY_TOKENS = 600
 
 interface ChatMessage {
@@ -58,21 +62,43 @@ function parseMessages(body: unknown): ChatMessage[] | null {
   }
 
   const messages: ChatMessage[] = []
-  let totalChars = 0
   for (const entry of raw) {
     if (typeof entry !== 'object' || entry === null) return null
     const { role, content } = entry as { role?: unknown; content?: unknown }
     if (role !== 'user' && role !== 'assistant') return null
     if (typeof content !== 'string') return null
     const trimmed = content.trim()
-    if (trimmed.length === 0 || trimmed.length > MAX_MESSAGE_CHARS) return null
-    totalChars += trimmed.length
-    if (totalChars > MAX_TOTAL_CHARS) return null
-    messages.push({ role, content: trimmed })
+    if (trimmed.length === 0) return null
+    if (role === 'user') {
+      if (trimmed.length > MAX_USER_MESSAGE_CHARS) return null
+      messages.push({ role, content: trimmed })
+    } else {
+      // Our own prior reply — truncate rather than reject.
+      messages.push({ role, content: trimmed.slice(0, MAX_ASSISTANT_MESSAGE_CHARS) })
+    }
   }
 
-  // The conversation must end with the user's question.
+  // The Messages API requires a user-first sequence; a trimmed client history
+  // window can begin with an assistant turn, so drop any leading ones.
+  while (messages.length > 0 && messages[0].role === 'assistant') messages.shift()
+
+  // Must be non-empty and end with the user's current question.
+  if (messages.length === 0) return null
   if (messages[messages.length - 1].role !== 'user') return null
+
+  // Bound the forwarded history: drop oldest turns (keeping the final user
+  // message and a user-first sequence) until under the ceiling. Truncation
+  // above means a lone final user message is always within the ceiling.
+  let total = messages.reduce((sum, m) => sum + m.content.length, 0)
+  while (total > MAX_TOTAL_CHARS && messages.length > 1) {
+    total -= messages[0].content.length
+    messages.shift()
+    while (messages.length > 1 && messages[0].role === 'assistant') {
+      total -= messages[0].content.length
+      messages.shift()
+    }
+  }
+
   return messages
 }
 

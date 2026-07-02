@@ -3,7 +3,9 @@ export interface Demo {
   title: string
   description: string
   demonstrates: string[]
-  /** Internal route to a static demo page on this site. */
+  /** Call-to-action label for the card's button (e.g. "Open lead capture demo"). */
+  cta?: string
+  /** Internal route to an interactive demo page on this site. */
   to?: string
   /** External demo link, if one is ever hosted elsewhere. */
   href?: string
@@ -21,6 +23,7 @@ export const DEMOS: Demo[] = [
       'Pipeline stages from new to won',
       'A clear next step for every lead',
     ],
+    cta: 'Open lead capture demo',
     to: '/demos/lead-capture',
   },
   {
@@ -34,6 +37,7 @@ export const DEMOS: Demo[] = [
       'Human review before anything sends',
       'Why drafts come before automation',
     ],
+    cta: 'Open follow-up demo',
     to: '/demos/follow-up-assistant',
   },
   {
@@ -46,6 +50,7 @@ export const DEMOS: Demo[] = [
       'Lead list with statuses and next steps',
       'A short, plain task list',
     ],
+    cta: 'Open dashboard demo',
     to: '/demos/small-business-dashboard',
   },
   {

@@ -6,32 +6,44 @@ import { CTASection } from '../components/CTASection'
 import { DEMOS } from '../data/demos'
 import { CTA } from '../data/site'
 
+const readyDemos = DEMOS.filter((demo) => demo.to || demo.href)
+const upcomingDemos = DEMOS.filter((demo) => !demo.to && !demo.href)
+
 export default function Demos() {
   return (
     <>
       <PageHero
-        eyebrow="Demos / Proof Hub"
-        title="See the kinds of systems we build."
-        subtitle="These demos show how a small business can capture leads, organize information, draft follow-ups, and manage next steps from one simple system."
+        eyebrow="Interactive demos"
+        title="Explore the example systems we build."
+        subtitle="Real, clickable, front-end demos of the kind of systems Laine Industries builds for small businesses. Open any one and try it."
       />
 
       <Section>
         <DemoDisclaimer className="mb-10">
-          These are interactive, front-end proof-of-concept demos built with
-          example data — no real client information, no backend, and no live
-          automation. They show the kinds of systems Laine Industries can
-          build, not client results.
+          These are front-end example demos built with example data. They show
+          the kind of systems Laine Industries can build — they are not live
+          client systems, and no data is saved or sent.
         </DemoDisclaimer>
 
-        <div className="grid gap-6 sm:grid-cols-2">
-          {DEMOS.map((demo) => (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {readyDemos.map((demo) => (
             <DemoCard key={demo.id} demo={demo} />
           ))}
         </div>
 
-        <p className="mx-auto mt-10 max-w-2xl text-center text-sm leading-relaxed text-slate-500">
-          Demos are simplified on purpose. An actual system is shaped around
-          the business it's built for.
+        {upcomingDemos.length > 0 && (
+          <p className="mx-auto mt-8 max-w-2xl text-center text-sm text-slate-500">
+            More on the way:{' '}
+            <span className="font-medium text-slate-600">
+              {upcomingDemos.map((demo) => demo.title).join(', ')}
+            </span>{' '}
+            — coming soon.
+          </p>
+        )}
+
+        <p className="mx-auto mt-6 max-w-2xl text-center text-sm leading-relaxed text-slate-500">
+          Demos are simplified on purpose. An actual system is shaped around the
+          business it's built for.
         </p>
       </Section>
 
@@ -40,8 +52,8 @@ export default function Demos() {
         text="Start with the intake form and we'll recommend the simplest version that solves your real problem first."
         buttonLabel="Start With the Intake Form"
         buttonTo={CTA.intake.to}
-        secondaryLabel="See pilot builds"
-        secondaryTo="/case-studies"
+        secondaryLabel="Contact us"
+        secondaryTo="/contact"
       />
     </>
   )

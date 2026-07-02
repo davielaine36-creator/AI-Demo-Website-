@@ -1,10 +1,10 @@
-# Lane Industries — Client Handoff Checklist
+# Laine Industries — Client Handoff Checklist
 
 Use this to finish a project cleanly and leave the client feeling confident and
 taken care of. A strong handoff is where referrals and repeat work come from.
 
 > Goal: the client understands exactly what they have, how to use it, and how to
-> get more help — and Lane Industries is paid in full and set up for the next
+> get more help — and Laine Industries is paid in full and set up for the next
 > opportunity.
 
 ---

@@ -1,4 +1,4 @@
-# Lane Industries — Proposal Template
+# Laine Industries — Proposal Template
 
 A simple, reusable proposal. Copy this whole file, fill in the `[brackets]`,
 delete anything that doesn't apply, and send as a doc, PDF, or email. Keep it to
@@ -10,7 +10,7 @@ delete anything that doesn't apply, and send as a doc, PDF, or email. Keep it to
 ---
 
 **Prepared for:** [Client name / Business name]
-**Prepared by:** Lane Industries (David & Elysio)
+**Prepared by:** Laine Industries (David & Eliseo)
 **Date:** [Date]
 **Valid for:** 14 days
 
@@ -106,7 +106,7 @@ By approving below, [Client] agrees to the scope, timeline, and price above.
 - **Signature / approved via:** ____________________ (typed name or "Approved" by email is fine)
 - **Date:** ____________________
 
-- **Lane Industries:** ____________________
+- **Laine Industries:** ____________________
 - **Date:** ____________________
 
 ---

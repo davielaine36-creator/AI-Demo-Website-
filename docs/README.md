@@ -1,6 +1,6 @@
-# Lane Industries — Docs Index
+# Laine Industries — Docs Index
 
-The playbook for running Lane Industries. Everything here is an **internal working
+The playbook for running Laine Industries. Everything here is an **internal working
 doc** (business, sales, delivery, and operations) unless marked
 **client-facing**. Nothing in this folder is code or part of the public website.
 
@@ -15,21 +15,21 @@ doc** (business, sales, delivery, and operations) unless marked
 ### 1. Sales / Outreach
 | Doc | What it's for | Who uses it | When | Internal / Client-facing |
 |---|---|---|---|---|
-| `outreach-kit.md` | Ready-to-send messages (cold, warm, text, follow-up) by audience | David / Elysio | Prospecting, first contact | Internal (messages sent to clients) |
-| `offer-sheet.md` | The 5 offers with scope, rough price ranges, timelines | David / Elysio | Deciding what to pitch; quoting | Internal (can adapt parts for clients) |
-| `first-10-clients-plan.md` | Who to contact first, daily/weekly targets, task split | David + Elysio | Early growth, weekly planning | Internal |
+| `outreach-kit.md` | Ready-to-send messages (cold, warm, text, follow-up) by audience | David / Eliseo | Prospecting, first contact | Internal (messages sent to clients) |
+| `offer-sheet.md` | The 5 offers with scope, rough price ranges, timelines | David / Eliseo | Deciding what to pitch; quoting | Internal (can adapt parts for clients) |
+| `first-10-clients-plan.md` | Who to contact first, daily/weekly targets, task split | David + Eliseo | Early growth, weekly planning | Internal |
 
 ### 2. Discovery / Calls
 | Doc | What it's for | Who uses it | When | Internal / Client-facing |
 |---|---|---|---|---|
 | `discovery-call-script.md` | Opening, questions, framing, closing, objections | Whoever runs the call | During/before a discovery call | Internal |
-| `client-question-answer-bank.md` | Plain-English answers to ~30 common questions + pitches | David / Elysio | Call prep + founder training | Internal |
-| `one-page-call-cheat-sheet.md` | Compressed glance-before-a-call quick reference | David / Elysio | Right before / during a call | Internal (print it) |
+| `client-question-answer-bank.md` | Plain-English answers to ~30 common questions + pitches | David / Eliseo | Call prep + founder training | Internal |
+| `one-page-call-cheat-sheet.md` | Compressed glance-before-a-call quick reference | David / Eliseo | Right before / during a call | Internal (print it) |
 
 ### 3. Proposal / Client Start
 | Doc | What it's for | Who uses it | When | Internal / Client-facing |
 |---|---|---|---|---|
-| `proposal-template.md` | Reusable copy/paste proposal + sign-off | David / Elysio | After a call, to send a quote | Client-facing (filled in) |
+| `proposal-template.md` | Reusable copy/paste proposal + sign-off | David / Eliseo | After a call, to send a quote | Client-facing (filled in) |
 | `project-start-checklist.md` | The "after they say yes" kickoff sequence | Whoever owns the client | Right after a yes, before building | Internal |
 
 ### 4. Scope / Boundaries

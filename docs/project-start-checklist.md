@@ -1,4 +1,4 @@
-# Lane Industries — Project Start Checklist
+# Laine Industries — Project Start Checklist
 
 Use this the moment a lead says "yes." It keeps kickoff clean and makes sure you
 never start building before the basics (and the deposit) are handled.

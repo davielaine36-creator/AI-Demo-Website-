@@ -1,4 +1,4 @@
-# Lane Industries — One-Page Call Cheat Sheet
+# Laine Industries — One-Page Call Cheat Sheet
 
 Quick glance before a discovery call or client chat. Say it calm and simple.
 Full version: `client-question-answer-bank.md`.

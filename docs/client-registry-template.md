@@ -1,4 +1,4 @@
-# Lane Industries — Client Registry
+# Laine Industries — Client Registry
 
 The single source of truth for who our clients are and where their systems live.
 Copy the table, add a row per client/system, and keep it current. Use the ID from

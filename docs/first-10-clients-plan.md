@@ -1,4 +1,4 @@
-# Lane Industries — First 10 Clients Plan
+# Laine Industries — First 10 Clients Plan
 
 A simple, honest plan to land the first 10 clients. The goal early on isn't
 volume — it's a handful of real builds you can do exceptionally well and learn
@@ -40,6 +40,7 @@ of system you build**, never as finished case studies with fake results.
 - **Don't say:** "We increased their revenue by X%" or anything you can't back up.
 - Point people to `laneindustries.dev/case-studies` and note they're pilots in
   progress — being early and honest is a selling point, not a weakness.
+  - _TODO: Confirm final domain/email. Brand spelling is Laine Industries; avoid using `laneindustries.dev` long-term unless intentionally chosen._
 
 As real outcomes appear, update the case-study docs and use those numbers.
 
@@ -84,7 +85,7 @@ Track leading indicators (conversations, intakes) — the deals follow.
 
 ---
 
-## How David and Elysio should split tasks
+## How David and Eliseo should split tasks
 
 Play to strengths and avoid stepping on each other. Suggested split:
 

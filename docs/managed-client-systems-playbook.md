@@ -1,20 +1,20 @@
-# Lane Industries — Managed Client Systems Playbook
+# Laine Industries — Managed Client Systems Playbook
 
-How Lane Industries handles the technical side so non-technical clients don't have
+How Laine Industries handles the technical side so non-technical clients don't have
 to. Most small-business clients do not want to manage GitHub, Vercel, Supabase,
 n8n, domains, DNS, or deployments. They want a working system and someone they
 trust to run it. This playbook is our default operating model.
 
-> One-line principle: **the client owns the outcome; Lane Industries owns the
+> One-line principle: **the client owns the outcome; Laine Industries owns the
 > plumbing.** Unless they specifically ask to own the infrastructure, we manage it.
 
 ---
 
 ## The three models
 
-### 1. Lane Managed Build (DEFAULT)
+### 1. Laine Managed Build (DEFAULT)
 
-Lane Industries builds **and** runs the technical system. The client gets a live
+Laine Industries builds **and** runs the technical system. The client gets a live
 link/system and a walkthrough — nothing technical to manage.
 
 - **How it works:** We build on our infrastructure (our GitHub, Vercel, Supabase,
@@ -53,20 +53,20 @@ Start as a Managed Build, then transfer ownership to the client if/when they ask
 
 | Situation | Recommended model |
 |---|---|
-| Non-technical owner, wants it handled | **Lane Managed Build** |
+| Non-technical owner, wants it handled | **Laine Managed Build** |
 | Wants low ongoing cost, has tech help | Client-Owned Build |
-| Unsure, wants flexibility | **Lane Managed Build** → Transfer Later if asked |
+| Unsure, wants flexibility | **Laine Managed Build** → Transfer Later if asked |
 | Bigger business with IT/agency | Client-Owned Build |
-| Quick pilot / first build | **Lane Managed Build** |
+| Quick pilot / first build | **Laine Managed Build** |
 
-Default to **Lane Managed Build** unless the client has a clear reason to own the
+Default to **Laine Managed Build** unless the client has a clear reason to own the
 infrastructure.
 
 ---
 
 ## Pros / cons
 
-**Lane Managed Build**
+**Laine Managed Build**
 - ➕ Easiest for the client; nothing technical to learn.
 - ➕ Recurring monthly revenue; we control quality and uptime.
 - ➕ Faster to launch (our accounts are already set up).
@@ -101,7 +101,7 @@ complicated.
 
 ---
 
-## What Lane Industries manages behind the scenes
+## What Laine Industries manages behind the scenes
 
 - Source code and version control (GitHub).
 - Hosting and deployments (Vercel).

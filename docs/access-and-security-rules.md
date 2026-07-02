@@ -1,7 +1,7 @@
-# Lane Industries — Access & Security Rules
+# Laine Industries — Access & Security Rules
 
 Simple, non-negotiable rules for handling client access and data. These protect
-the client, protect Lane Industries, and keep us looking professional. Not legal
+the client, protect Laine Industries, and keep us looking professional. Not legal
 boilerplate — just how we operate.
 
 > One-line principle: **least access, for the least time, with no secrets ever

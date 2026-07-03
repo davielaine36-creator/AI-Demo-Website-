@@ -9,6 +9,7 @@ import {
   submitForm,
   type SubmitResult,
 } from '../utils/formSubmit'
+import { useFormTracking } from '../lib/useFormTracking'
 
 const INTEREST_OPTIONS = [
   'Website',
@@ -43,8 +44,12 @@ export function ContactForm() {
     null,
   )
 
-  const set = <K extends keyof ContactState>(key: K, value: ContactState[K]) =>
+  const { trackStart, trackSubmit, trackSuccess } = useFormTracking('contact')
+
+  const set = <K extends keyof ContactState>(key: K, value: ContactState[K]) => {
+    trackStart()
     setForm((f) => ({ ...f, [key]: value }))
+  }
 
   const validate = (): boolean => {
     const next: Record<string, string> = {}
@@ -64,6 +69,7 @@ export function ContactForm() {
       return
     }
 
+    trackSubmit()
     setSubmitting(true)
     const summary = buildSummary('Laine Industries — Contact Message', [
       {
@@ -86,6 +92,7 @@ export function ContactForm() {
       { formType: 'contact', summary },
     )
 
+    if (res.ok) trackSuccess(res.channel)
     setSubmitting(false)
     setResult({ summary, res })
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -171,7 +178,7 @@ export function ContactForm() {
       <PrivacyNote />
 
       <div className="flex flex-wrap items-center gap-4">
-        <Button type="submit" size="lg" disabled={submitting}>
+        <Button type="submit" size="lg" disabled={submitting} trackAs={false}>
           {submitting ? 'Preparing…' : 'Send message'}
         </Button>
         <p className="text-xs text-slate-500">

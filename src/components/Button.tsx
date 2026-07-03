@@ -1,5 +1,11 @@
 import { Link } from 'react-router-dom'
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import {
+  Children,
+  isValidElement,
+  type ButtonHTMLAttributes,
+  type ReactNode,
+} from 'react'
+import { trackEvent } from '../lib/analytics'
 
 type Variant = 'primary' | 'secondary' | 'ghost'
 type Size = 'sm' | 'md' | 'lg'
@@ -20,11 +26,37 @@ const sizes: Record<Size, string> = {
   lg: 'text-base px-6 py-3',
 }
 
+/** Pull a readable label out of button children (ignores icon elements). */
+function extractText(node: ReactNode): string {
+  let text = ''
+  Children.forEach(node, (child) => {
+    if (typeof child === 'string' || typeof child === 'number') {
+      text += child
+    } else if (isValidElement(child)) {
+      text += extractText((child.props as { children?: ReactNode }).children)
+    }
+  })
+  return text.trim()
+}
+
+/** A link is "external" if it leaves the app (mailto/tel or another origin). */
+function isExternalHref(href: string): boolean {
+  return /^(https?:|mailto:|tel:)/i.test(href)
+}
+
 interface CommonProps {
   variant?: Variant
   size?: Size
   className?: string
   children: ReactNode
+  /**
+   * Override the analytics event name (defaults to `cta_click`, or
+   * `external_link_click` for external anchors). Set `trackEvent={false}`
+   * to opt this button out of tracking entirely.
+   */
+  trackAs?: string | false
+  /** Optional section/context label attached to the analytics event. */
+  trackSection?: string
 }
 
 type ButtonAsButton = CommonProps &
@@ -54,14 +86,26 @@ export function Button(props: ButtonProps) {
     size = 'md',
     className = '',
     children,
+    trackAs,
+    trackSection,
     ...rest
   } = props
   const classes = `${base} ${variants[variant]} ${sizes[size]} ${className}`
+  const label = extractText(children)
+
+  const emit = (event: string, destination?: string) => {
+    if (trackAs === false) return
+    trackEvent(trackAs || event, {
+      text: label || undefined,
+      destination,
+      section: trackSection,
+    })
+  }
 
   if ('to' in props && props.to !== undefined) {
     const { to } = props as ButtonAsLink
     return (
-      <Link to={to} className={classes}>
+      <Link to={to} className={classes} onClick={() => emit('cta_click', to)}>
         {children}
       </Link>
     )
@@ -69,6 +113,7 @@ export function Button(props: ButtonProps) {
 
   if ('href' in props && props.href !== undefined) {
     const { href, download, target, rel } = props as ButtonAsAnchor
+    const defaultEvent = isExternalHref(href) ? 'external_link_click' : 'cta_click'
     return (
       <a
         href={href}
@@ -76,15 +121,23 @@ export function Button(props: ButtonProps) {
         target={target}
         rel={rel ?? (target === '_blank' ? 'noopener noreferrer' : undefined)}
         className={classes}
+        onClick={() => emit(defaultEvent, href)}
       >
         {children}
       </a>
     )
   }
 
-  const buttonProps = rest as ButtonHTMLAttributes<HTMLButtonElement>
+  const { onClick, ...buttonProps } = rest as ButtonHTMLAttributes<HTMLButtonElement>
   return (
-    <button className={classes} {...buttonProps}>
+    <button
+      className={classes}
+      onClick={(e) => {
+        emit('cta_click')
+        onClick?.(e)
+      }}
+      {...buttonProps}
+    >
       {children}
     </button>
   )

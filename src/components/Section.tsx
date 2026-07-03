@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useSectionView } from '../lib/useSectionTracking'
 
 interface SectionProps {
   children: ReactNode
@@ -7,11 +8,21 @@ interface SectionProps {
   muted?: boolean
   /** Optional id for in-page anchor links. */
   id?: string
+  /** When set, emits a deduplicated `section_view` analytics event on scroll-in. */
+  trackName?: string
 }
 
-export function Section({ children, className = '', muted, id }: SectionProps) {
+export function Section({
+  children,
+  className = '',
+  muted,
+  id,
+  trackName,
+}: SectionProps) {
+  const ref = useSectionView<HTMLElement>(trackName)
   return (
     <section
+      ref={ref}
       id={id}
       className={`py-16 sm:py-20 lg:py-24 ${muted ? 'bg-slate-50' : ''} ${className}`}
     >

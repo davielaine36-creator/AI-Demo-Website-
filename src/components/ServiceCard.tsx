@@ -1,7 +1,8 @@
-import type { ReactNode } from 'react'
+import { useRef, type ReactNode } from 'react'
 import { Card } from './Card'
 import { FeatureList } from './FeatureList'
 import type { Service } from '../data/services'
+import { trackEvent } from '../lib/analytics'
 
 interface ServiceCardProps {
   service: Service
@@ -9,8 +10,21 @@ interface ServiceCardProps {
 }
 
 export function ServiceCard({ service, icon }: ServiceCardProps) {
+  // Only report the first interaction per mount so repeated clicks on the same
+  // card don't spam the event stream.
+  const tracked = useRef(false)
+  const handleClick = () => {
+    if (tracked.current) return
+    tracked.current = true
+    trackEvent('service_click', {
+      text: service.title,
+      service_id: service.id,
+      section: 'services',
+    })
+  }
+
   return (
-    <Card interactive className="flex h-full flex-col">
+    <Card interactive className="flex h-full flex-col" onClick={handleClick}>
       {icon && (
         <div className="mb-5 grid h-11 w-11 place-items-center rounded-xl bg-brand-50 text-brand-600">
           {icon}

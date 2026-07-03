@@ -10,6 +10,7 @@ import {
   type SubmitResult,
   type SummarySection,
 } from '../utils/formSubmit'
+import { useFormTracking } from '../lib/useFormTracking'
 
 const HELP_OPTIONS = [
   'Website',
@@ -77,16 +78,22 @@ export function IntakeForm() {
     null,
   )
 
-  const set = <K extends keyof IntakeState>(key: K, value: IntakeState[K]) =>
-    setForm((f) => ({ ...f, [key]: value }))
+  const { trackStart, trackSubmit, trackSuccess } = useFormTracking('intake')
 
-  const toggle = (key: 'help' | 'storage', option: string) =>
+  const set = <K extends keyof IntakeState>(key: K, value: IntakeState[K]) => {
+    trackStart()
+    setForm((f) => ({ ...f, [key]: value }))
+  }
+
+  const toggle = (key: 'help' | 'storage', option: string) => {
+    trackStart()
     setForm((f) => ({
       ...f,
       [key]: f[key].includes(option)
         ? f[key].filter((o) => o !== option)
         : [...f[key], option],
     }))
+  }
 
   const validate = (): boolean => {
     const next: Record<string, string> = {}
@@ -147,6 +154,7 @@ export function IntakeForm() {
       return
     }
 
+    trackSubmit()
     setSubmitting(true)
     const summary = buildSummary('Laine Industries — Intake Summary', buildSections())
 
@@ -155,6 +163,7 @@ export function IntakeForm() {
       { formType: 'intake', summary },
     )
 
+    if (res.ok) trackSuccess(res.channel)
     setSubmitting(false)
     setResult({ summary, res })
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -343,7 +352,7 @@ export function IntakeForm() {
       <PrivacyNote />
 
       <div className="flex flex-wrap items-center gap-4">
-        <Button type="submit" size="lg" disabled={submitting}>
+        <Button type="submit" size="lg" disabled={submitting} trackAs={false}>
           {submitting ? 'Preparing…' : 'Submit intake'}
         </Button>
         <p className="text-xs text-slate-500">

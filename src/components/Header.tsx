@@ -4,6 +4,7 @@ import { Logo } from './Logo'
 import { Button } from './Button'
 import { IconMenu, IconClose } from './Icons'
 import { NAV_LINKS, CTA } from '../data/site'
+import { trackEvent } from '../lib/analytics'
 
 export function Header() {
   const [open, setOpen] = useState(false)
@@ -34,7 +35,19 @@ export function Header() {
 
         <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary">
           {NAV_LINKS.map((link) => (
-            <NavLink key={link.to} to={link.to} className={linkClass} end={link.to === '/'}>
+            <NavLink
+              key={link.to}
+              to={link.to}
+              className={linkClass}
+              end={link.to === '/'}
+              onClick={() =>
+                trackEvent('nav_click', {
+                  text: link.label,
+                  destination: link.to,
+                  section: 'header',
+                })
+              }
+            >
               {link.label}
             </NavLink>
           ))}
@@ -72,6 +85,13 @@ export function Header() {
                 key={link.to}
                 to={link.to}
                 end={link.to === '/'}
+                onClick={() =>
+                  trackEvent('nav_click', {
+                    text: link.label,
+                    destination: link.to,
+                    section: 'mobile-menu',
+                  })
+                }
                 className={({ isActive }) =>
                   `rounded-lg px-3 py-2.5 text-base font-medium transition-colors ${
                     isActive

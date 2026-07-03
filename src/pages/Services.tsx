@@ -39,7 +39,7 @@ export default function Services() {
         </Button>
       </PageHero>
 
-      <Section>
+      <Section trackName="services">
         <div className="grid gap-6 lg:grid-cols-2">
           {SERVICES.map((service) => (
             <ServiceCard
@@ -52,7 +52,7 @@ export default function Services() {
       </Section>
 
       {/* Starter build / packages */}
-      <Section muted>
+      <Section muted trackName="starter-builds">
         <SectionHeading
           eyebrow="Starter builds"
           title="Simple ways to get started."

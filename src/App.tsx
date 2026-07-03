@@ -4,6 +4,7 @@ import { Footer } from './components/Footer'
 import { ScrollToTop } from './components/ScrollToTop'
 import { AskLane } from './components/AskLane'
 import { SystemSignature } from './components/SystemSignature'
+import { AnalyticsProvider } from './components/Analytics'
 
 import Home from './pages/Home'
 import Services from './pages/Services'
@@ -25,6 +26,8 @@ export default function App() {
   return (
     <div className="flex min-h-screen flex-col">
       <ScrollToTop />
+      {/* Site-wide analytics: cookieless pageviews + custom event tracking. */}
+      <AnalyticsProvider />
       <Header />
       <main className="flex-1">
         <Routes>

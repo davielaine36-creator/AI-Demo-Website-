@@ -11,6 +11,7 @@ import {
   type SubmitResult,
   type SummarySection,
 } from '../utils/formSubmit'
+import { useFormTracking } from '../lib/useFormTracking'
 
 /*
  * Full online intake — the complete discovery questionnaire from the intake PDF,
@@ -401,10 +402,15 @@ export function FullIntakeForm() {
   const asString = (name: string) => (form[name] as string) ?? ''
   const asArray = (name: string) => (form[name] as string[]) ?? []
 
-  const setValue = (name: string, value: FieldValue) =>
-    setForm((f) => ({ ...f, [name]: value }))
+  const { trackStart, trackSubmit, trackSuccess } = useFormTracking('full-intake')
 
-  const toggle = (name: string, option: string) =>
+  const setValue = (name: string, value: FieldValue) => {
+    trackStart()
+    setForm((f) => ({ ...f, [name]: value }))
+  }
+
+  const toggle = (name: string, option: string) => {
+    trackStart()
     setForm((f) => {
       const current = (f[name] as string[]) ?? []
       return {
@@ -414,6 +420,7 @@ export function FullIntakeForm() {
           : [...current, option],
       }
     })
+  }
 
   const validate = (): boolean => {
     const next: Record<string, string> = {}
@@ -442,12 +449,14 @@ export function FullIntakeForm() {
       return
     }
 
+    trackSubmit()
     setSubmitting(true)
     const summary = buildSummary(
       'Laine Industries — Full Intake Summary',
       buildSections(),
     )
     const res = await submitForm(form, { formType: 'full-intake', summary })
+    if (res.ok) trackSuccess(res.channel)
     setSubmitting(false)
     setResult({ summary, res })
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -568,7 +577,7 @@ export function FullIntakeForm() {
       <PrivacyNote />
 
       <div className="flex flex-wrap items-center gap-4 border-t border-slate-100 pt-8">
-        <Button type="submit" size="lg" disabled={submitting}>
+        <Button type="submit" size="lg" disabled={submitting} trackAs={false}>
           {submitting ? 'Preparing…' : 'Submit full intake'}
         </Button>
         <p className="text-xs text-slate-500">

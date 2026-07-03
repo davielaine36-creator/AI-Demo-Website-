@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { MouseEventHandler, ReactNode } from 'react'
 
 interface CardProps {
   children: ReactNode
@@ -11,6 +11,8 @@ interface CardProps {
    * override the default padding, so opt out here instead.
    */
   padded?: boolean
+  /** Optional click handler (used for interaction analytics, etc.). */
+  onClick?: MouseEventHandler<HTMLDivElement>
 }
 
 export function Card({
@@ -18,9 +20,11 @@ export function Card({
   className = '',
   interactive,
   padded = true,
+  onClick,
 }: CardProps) {
   return (
     <div
+      onClick={onClick}
       className={`rounded-2xl border border-slate-200 bg-white shadow-soft ${
         padded ? 'p-6 sm:p-7' : ''
       } ${

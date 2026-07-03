@@ -5,6 +5,7 @@ import { Button } from '../components/Button'
 import { ContactForm } from '../components/ContactForm'
 import { IconMail, IconClipboard, IconArrowRight } from '../components/Icons'
 import { CONTACT_EMAIL } from '../data/site'
+import { trackEvent } from '../lib/analytics'
 
 export default function Contact() {
   return (
@@ -45,6 +46,13 @@ export default function Contact() {
               </p>
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
+                onClick={() =>
+                  trackEvent('external_link_click', {
+                    text: 'Email us',
+                    destination: `mailto:${CONTACT_EMAIL}`,
+                    section: 'contact',
+                  })
+                }
                 className="mt-2 inline-block text-sm font-semibold text-brand-700 hover:text-brand-800"
               >
                 {CONTACT_EMAIL}

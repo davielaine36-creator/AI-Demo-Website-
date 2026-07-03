@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom'
 import { Logo } from './Logo'
 import { NAV_LINKS, SITE, CONTACT_EMAIL } from '../data/site'
+import { trackEvent } from '../lib/analytics'
 
 export function Footer() {
   const year = new Date().getFullYear()
+
+  const navClick = (text: string, destination: string) =>
+    trackEvent('nav_click', { text, destination, section: 'footer' })
 
   return (
     <footer className="border-t border-slate-200 bg-slate-50">
@@ -24,6 +28,7 @@ export function Footer() {
                 <li key={link.to}>
                   <Link
                     to={link.to}
+                    onClick={() => navClick(link.label, link.to)}
                     className="text-sm text-slate-600 transition-colors hover:text-ink"
                   >
                     {link.label}
@@ -39,6 +44,7 @@ export function Footer() {
               <li>
                 <Link
                   to="/intake"
+                  onClick={() => navClick('Intake form', '/intake')}
                   className="text-sm text-slate-600 transition-colors hover:text-ink"
                 >
                   Intake form
@@ -47,6 +53,7 @@ export function Footer() {
               <li>
                 <Link
                   to="/contact"
+                  onClick={() => navClick('Contact', '/contact')}
                   className="text-sm text-slate-600 transition-colors hover:text-ink"
                 >
                   Contact
@@ -55,6 +62,13 @@ export function Footer() {
               <li>
                 <a
                   href={`mailto:${CONTACT_EMAIL}`}
+                  onClick={() =>
+                    trackEvent('external_link_click', {
+                      text: 'Email',
+                      destination: `mailto:${CONTACT_EMAIL}`,
+                      section: 'footer',
+                    })
+                  }
                   className="text-sm text-slate-600 transition-colors hover:text-ink"
                 >
                   {CONTACT_EMAIL}
@@ -63,6 +77,7 @@ export function Footer() {
               <li>
                 <Link
                   to="/privacy"
+                  onClick={() => navClick('Privacy / Data Use', '/privacy')}
                   className="text-sm text-slate-600 transition-colors hover:text-ink"
                 >
                   Privacy / Data Use

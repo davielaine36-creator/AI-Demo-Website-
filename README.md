@@ -28,7 +28,7 @@ src/
     form/          Form controls + shared result view
   pages/           One file per route (Home, Services, Intake, …)
   data/            Site config + content (services, demos, Ask Laine knowledge)
-  lib/             Ask Laine retrieval (keyword scoring over the knowledge chunks)
+  lib/             Ask Laine retrieval + analytics layer (trackEvent / trackPageView)
   utils/           Form summary building + submission logic
   App.tsx          Routes
   main.tsx         App entry
@@ -117,6 +117,19 @@ If the file is ever missing, the site still builds — only the download button 
 
 ---
 
+## Analytics
+
+Privacy-conscious, cookieless analytics via **Vercel Web Analytics** plus a
+small first-party event layer (CTA clicks, nav clicks, form funnel, etc.).
+No cookies, no PII, no required environment variables.
+
+See **[`ANALYTICS.md`](ANALYTICS.md)** for the full event list, where the code
+lives, and how to verify it locally and on Vercel. Quick version: enable **Web
+Analytics** in the Vercel project dashboard, then watch data land in the
+**Analytics** tab. Locally, events log to the browser console.
+
+---
+
 ## Deploying to Vercel
 
 This is a static SPA — Vercel auto-detects Vite.
@@ -151,7 +164,8 @@ These are marked with `TODO` comments in the code where relevant:
       or embeds (`src/data/demos.ts`).
 - [ ] **Case study updates** — add measured before/after results as pilots
       complete (`src/data/caseStudies.ts`).
-- [ ] **Analytics** — add a privacy-friendly analytics snippet + a submit event.
+- [x] **Analytics** — privacy-friendly analytics + event layer added. See
+      [`ANALYTICS.md`](ANALYTICS.md). (V2 ideas listed there.)
 - [ ] **Scheduling link** — add a booking/scheduling link (e.g. Cal.com) to
       Contact / How It Works.
 - [ ] **OG image** — add a `1200×630` social preview image and reference it in

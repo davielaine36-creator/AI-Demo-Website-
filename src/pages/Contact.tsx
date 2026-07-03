@@ -16,7 +16,7 @@ export default function Contact() {
         subtitle="We'll help you figure out the simplest useful system to start with. No pressure, no jargon."
       />
 
-      <Section>
+      <Section trackName="contact">
         <div className="grid gap-8 lg:grid-cols-[1fr_1.6fr] lg:items-start">
           {/* What to send + direct email + intake link */}
           <div className="space-y-6 lg:sticky lg:top-24">

@@ -2,6 +2,7 @@ import { Button } from '../components/Button'
 import { Section, SectionHeading } from '../components/Section'
 import { Card } from '../components/Card'
 import { CTASection } from '../components/CTASection'
+import { useSectionView } from '../lib/useSectionTracking'
 import {
   IconGlobe,
   IconLayout,
@@ -54,10 +55,14 @@ const AUDIENCE = [
 ]
 
 export default function Home() {
+  const heroRef = useSectionView<HTMLElement>('hero')
   return (
     <>
       {/* Hero */}
-      <section className="surface-gradient border-b border-slate-100">
+      <section
+        ref={heroRef}
+        className="surface-gradient border-b border-slate-100"
+      >
         <div className="container-content py-20 sm:py-24 lg:py-28">
           <div className="mx-auto max-w-3xl text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-3.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-slate-600">
@@ -89,7 +94,7 @@ export default function Home() {
       </section>
 
       {/* Problem */}
-      <Section>
+      <Section trackName="problem">
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <SectionHeading
             eyebrow="The real problem"
@@ -114,7 +119,7 @@ export default function Home() {
       </Section>
 
       {/* What we build */}
-      <Section muted>
+      <Section muted trackName="services">
         <SectionHeading
           eyebrow="What Laine Industries builds"
           title="Four building blocks. One simple system."
@@ -138,7 +143,7 @@ export default function Home() {
       </Section>
 
       {/* Who it's for */}
-      <Section>
+      <Section trackName="audience">
         <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center">
           <SectionHeading
             eyebrow="Who it's for"

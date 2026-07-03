@@ -29,7 +29,9 @@ platform.
 | --- | --- |
 | `src/lib/analytics.ts` | Core: `trackEvent`, `trackPageView`, context helpers (UTM / referrer / device). Provider-agnostic — swap sinks in `dispatch()`. |
 | `src/lib/useFormTracking.ts` | `useFormTracking(form)` hook → `trackStart` / `trackSubmit` / `trackSuccess` for form funnels. |
-| `src/components/Analytics.tsx` | `AnalyticsProvider`: mounts Vercel `<Analytics />` and fires `page_view` on every route change. |
+| `src/lib/useSectionTracking.ts` | `useSectionView(name)` (IntersectionObserver → `section_view`) + `initScrollDepth(path)` (`scroll_depth` milestones). |
+| `src/components/Analytics.tsx` | `AnalyticsProvider`: mounts Vercel `<Analytics />`, fires `page_view`, and arms scroll-depth on every route change. |
+| `src/components/Section.tsx`, `PageHero.tsx`, `CTASection.tsx` | Accept a `trackName` prop that wires `section_view` (defaults: `PageHero`→`hero`, `CTASection`→`cta`). |
 | `src/App.tsx` | Mounts `<AnalyticsProvider />` once, inside the Router. |
 | `src/components/Button.tsx` | Auto-emits `cta_click` / `external_link_click`. Opt out with `trackAs={false}`. |
 | `src/components/Header.tsx`, `Footer.tsx` | `nav_click` on navigation links. |
@@ -41,6 +43,8 @@ platform.
 | Event | When it fires | Key properties |
 | --- | --- | --- |
 | `page_view` | Every route change (SPA nav + first load) | `path`, `referrer`, `utm_*`, `device_type`, `language` |
+| `section_view` | A tracked section scrolls into view (deduped — see below) | `section`, `path`, `page`, `timestamp`, `device_type` |
+| `scroll_depth` | Page scrolled past a 25 / 50 / 75 / 100% milestone (once each per page view) | `depth`, `path`, `page` |
 | `cta_click` | Any `Button` rendered as a link/button is clicked | `text`, `destination`, `section` |
 | `nav_click` | Header / mobile-menu / footer navigation link | `text`, `destination`, `section` |
 | `service_click` | A service card is clicked (first click per view) | `text`, `service_id`, `section` |
@@ -55,6 +59,32 @@ All events also carry `path` automatically.
 > optional n8n webhook (`VITE_N8N_INTAKE_WEBHOOK_URL`) is configured and returns
 > OK. Without a webhook the forms fall back to copy/email, which the browser
 > cannot confirm, so success is not detectable in that mode.
+
+### Section views: which sections & how they're deduplicated
+
+`section_view` fires via an `IntersectionObserver` when a section is
+"meaningfully" on screen — either **≥ 50% of the section is visible**, or the
+section **fills ≥ 50% of the viewport** (the second rule covers sections taller
+than the screen, where the ratio can never reach 50%).
+
+**Deduplication:** each section fires **at most once per section per path, per
+session**. The observer disconnects itself after firing, and a module-level
+`Set` keyed by `` `${path}|${name}` `` guards against re-firing (including React
+StrictMode's double-invoke in dev). Reusing a name like `hero` on different
+pages does not collide because the path is part of the key.
+`scroll_depth` milestones are likewise deduped and are **re-armed on each route
+change**, so every page view gets its own set of milestone events.
+
+Tracked section names:
+
+| Page | `section` values |
+| --- | --- |
+| Home (`/`) | `hero`, `problem`, `services`, `audience`, `cta` |
+| Services (`/services`) | `hero`, `services`, `starter-builds`, `cta` |
+| How It Works (`/how-it-works`) | `hero`, `process`, `cta` |
+| Case Studies (`/case-studies`) | `hero`, `case-studies`, `cta` |
+| Contact (`/contact`) | `hero`, `contact` |
+| Other pages using `PageHero` / `CTASection` | `hero`, `cta` |
 
 ## Environment variables
 
@@ -74,9 +104,15 @@ The only related (and optional) variable is the pre-existing
 
    ```
    [analytics] page_view { path: '/', device_type: 'desktop', ... }
+   [analytics] section_view { section: 'hero', page: 'home', timestamp: ... }
+   [analytics] scroll_depth { depth: 25, page: 'home' }
+   [analytics] section_view { section: 'services', page: 'home', ... }
    [analytics] cta_click { text: 'Start Intake', destination: '/intake', ... }
    [analytics] nav_click { text: 'Services', destination: '/services', section: 'header' }
    ```
+
+   Scroll down a page to see `section_view` (once per section) and `scroll_depth`
+   (at 25 / 50 / 75 / 100%) — each fires only once, not on every scroll tick.
 
    (Locally there is no Vercel endpoint, so events are logged to the console
    instead of being sent. That's expected.)
@@ -112,8 +148,6 @@ The only related (and optional) variable is the pre-existing
 
 - Add a second, self-hosted/privacy sink (e.g. Plausible or PostHog) behind an
   env var — `dispatch()` in `analytics.ts` is already the single swap point.
-- Track scroll depth / section visibility (IntersectionObserver) for "what
-  sections do people look at."
 - Track AskLane concierge opens/messages and demo interactions.
 - Server-side conversion events from the n8n webhook for ad-block-resistant
   lead tracking.

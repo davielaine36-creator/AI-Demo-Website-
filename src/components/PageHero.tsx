@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useSectionView } from '../lib/useSectionTracking'
 
 interface PageHeroProps {
   eyebrow?: string
@@ -7,6 +8,8 @@ interface PageHeroProps {
   children?: ReactNode
   /** Center the text (used on interior pages). */
   center?: boolean
+  /** When set, emits a deduplicated `section_view` analytics event on scroll-in. */
+  trackName?: string
 }
 
 export function PageHero({
@@ -15,9 +18,11 @@ export function PageHero({
   subtitle,
   children,
   center = true,
+  trackName = 'hero',
 }: PageHeroProps) {
+  const ref = useSectionView<HTMLElement>(trackName)
   return (
-    <section className="surface-gradient border-b border-slate-100">
+    <section ref={ref} className="surface-gradient border-b border-slate-100">
       <div className="container-content py-16 sm:py-20 lg:py-24">
         <div className={center ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl'}>
           {eyebrow && (

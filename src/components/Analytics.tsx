@@ -2,17 +2,20 @@ import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Analytics as VercelAnalytics } from '@vercel/analytics/react'
 import { trackPageView } from '../lib/analytics'
+import { initScrollDepth } from '../lib/useSectionTracking'
 
 /**
- * Fires a first-party `page_view` event on every SPA route change.
- * Kept separate from the Vercel <Analytics/> component (which records its
- * own automatic pageviews) so our custom event stream stays complete even
- * if we swap analytics providers later.
+ * On every SPA route change: fire a first-party `page_view` and (re)arm
+ * scroll-depth milestone tracking. Kept separate from the Vercel <Analytics/>
+ * component (which records its own automatic pageviews) so our custom event
+ * stream stays complete even if we swap analytics providers later.
  */
 function usePageViews() {
   const location = useLocation()
   useEffect(() => {
     trackPageView(location.pathname + location.search)
+    const cleanup = initScrollDepth(location.pathname)
+    return cleanup
   }, [location.pathname, location.search])
 }
 

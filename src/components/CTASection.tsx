@@ -1,4 +1,5 @@
 import { Button } from './Button'
+import { useSectionView } from '../lib/useSectionTracking'
 
 interface CTASectionProps {
   headline: string
@@ -7,6 +8,8 @@ interface CTASectionProps {
   buttonTo: string
   secondaryLabel?: string
   secondaryTo?: string
+  /** When set, emits a deduplicated `section_view` analytics event on scroll-in. */
+  trackName?: string
 }
 
 export function CTASection({
@@ -16,9 +19,11 @@ export function CTASection({
   buttonTo,
   secondaryLabel,
   secondaryTo,
+  trackName = 'cta',
 }: CTASectionProps) {
+  const ref = useSectionView<HTMLElement>(trackName)
   return (
-    <section className="py-16 sm:py-20">
+    <section ref={ref} className="py-16 sm:py-20">
       <div className="container-content">
         <div className="surface-gradient overflow-hidden rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center shadow-soft sm:px-12 sm:py-16">
           <h2 className="mx-auto max-w-2xl text-2xl font-bold tracking-tight text-ink sm:text-3xl">

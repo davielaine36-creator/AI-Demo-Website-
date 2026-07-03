@@ -42,7 +42,7 @@ export default function HowItWorks() {
         subtitle="From first conversation to a working system you actually understand — no jargon, no overbuilding."
       />
 
-      <Section>
+      <Section trackName="process">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-start">
           <div>
             <SectionHeading

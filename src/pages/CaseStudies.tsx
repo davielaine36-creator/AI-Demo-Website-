@@ -14,7 +14,7 @@ export default function CaseStudies() {
         subtitle="Laine Industries is building practical systems for real businesses and documenting the before, build, and after of each project."
       />
 
-      <Section>
+      <Section trackName="case-studies">
         <div className="grid gap-6 lg:grid-cols-2">
           {CASE_STUDIES.map((study) => (
             <CaseStudyCard key={study.id} study={study} />

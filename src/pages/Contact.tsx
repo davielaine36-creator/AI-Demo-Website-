@@ -1,4 +1,5 @@
 import { PageHero } from '../components/PageHero'
+import { SEO } from '../components/SEO'
 import { Section } from '../components/Section'
 import { Card } from '../components/Card'
 import { Button } from '../components/Button'
@@ -10,6 +11,10 @@ import { trackEvent } from '../lib/analytics'
 export default function Contact() {
   return (
     <>
+      <SEO
+        title="Contact | Laine Industries"
+        description="Tell us what feels messy in your business and we'll help you figure out the simplest useful website or lead system to start with. No pressure, no jargon."
+      />
       <PageHero
         eyebrow="Contact"
         title="Tell us what feels messy in your business."

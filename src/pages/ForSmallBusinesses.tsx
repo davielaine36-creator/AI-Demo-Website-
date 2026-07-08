@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { PageHero } from '../components/PageHero'
+import { SEO } from '../components/SEO'
 import { Section, SectionHeading } from '../components/Section'
 import { Card } from '../components/Card'
 import { FeatureList } from '../components/FeatureList'
@@ -63,6 +64,10 @@ const HELPS = [
 export default function ForSmallBusinesses() {
   return (
     <>
+      <SEO
+        title="AI Websites & Systems for Small Businesses | Laine Industries"
+        description="A simple system for small businesses tired of doing everything manually — capture leads, organize customer info, follow up faster, and know what needs attention."
+      />
       <PageHero
         eyebrow="For small businesses"
         title="A simple system for businesses tired of doing everything manually."

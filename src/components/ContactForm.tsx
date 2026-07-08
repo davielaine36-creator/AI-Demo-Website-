@@ -10,6 +10,7 @@ import {
   type SubmitResult,
 } from '../utils/formSubmit'
 import { useFormTracking } from '../lib/useFormTracking'
+import { getLeadSource } from '../lib/leadContext'
 
 const INTEREST_OPTIONS = [
   'Website',
@@ -89,7 +90,7 @@ export function ContactForm() {
 
     const res = await submitForm(
       { ...form } as unknown as Record<string, string | string[]>,
-      { formType: 'contact', summary },
+      { formType: 'contact', summary, source: getLeadSource('contact') },
     )
 
     if (res.ok) trackSuccess(res.channel)

@@ -12,6 +12,7 @@ import {
   type SummarySection,
 } from '../utils/formSubmit'
 import { useFormTracking } from '../lib/useFormTracking'
+import { getLeadSource, computeLeadScore, leadStatusFromScore } from '../lib/leadContext'
 
 /*
  * Full online intake — the complete discovery questionnaire from the intake PDF,
@@ -455,7 +456,26 @@ export function FullIntakeForm() {
       'Laine Industries — Full Intake Summary',
       buildSections(),
     )
-    const res = await submitForm(form, { formType: 'full-intake', summary })
+    const source = getLeadSource('full-intake')
+    const leadScore = computeLeadScore({
+      name: asString('name'),
+      business: asString('business'),
+      email: asString('email'),
+      phone: asString('phone'),
+      website: asString('website'),
+      businessType: asString('businessType'),
+      painPoint: asString('topPriority'),
+      needs: [...asArray('websiteSections'), ...asArray('statuses')],
+      budget: asString('budgetRange'),
+      timeline: `${asString('readiness')} ${asString('urgency')} ${asString('timeline')}`.trim(),
+    })
+    const res = await submitForm(form, {
+      formType: 'full-intake',
+      summary,
+      source,
+      leadScore,
+      leadStatus: leadStatusFromScore(leadScore),
+    })
     if (res.ok) trackSuccess(res.channel)
     setSubmitting(false)
     setResult({ summary, res })

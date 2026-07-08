@@ -1,0 +1,6 @@
+# Laine Industries — laineindustries.co
+# All content is public marketing; allow full crawl.
+User-agent: *
+Allow: /
+
+Sitemap: https://laineindustries.co/sitemap.xml

@@ -1,17 +1,27 @@
+import { useEffect } from 'react'
 import { PageHero } from '../components/PageHero'
+import { SEO } from '../components/SEO'
 import { Section } from '../components/Section'
 import { DemoCard } from '../components/DemoCard'
 import { DemoDisclaimer } from '../components/demo/DemoDisclaimer'
 import { CTASection } from '../components/CTASection'
 import { DEMOS } from '../data/demos'
 import { CTA } from '../data/site'
+import { trackEvent } from '../lib/analytics'
 
 const readyDemos = DEMOS.filter((demo) => demo.to || demo.href)
 const upcomingDemos = DEMOS.filter((demo) => !demo.to && !demo.href)
 
 export default function Demos() {
+  useEffect(() => {
+    trackEvent('demo_page_view')
+  }, [])
   return (
     <>
+      <SEO
+        title="Interactive Demos | AI Websites & Lead Systems | Laine Industries"
+        description="Explore clickable example systems Laine Industries builds for small businesses: lead capture, AI follow-up drafting, and a small-business dashboard."
+      />
       <PageHero
         eyebrow="Interactive demos"
         title="Explore the example systems we build."

@@ -46,19 +46,29 @@ platform.
 | `section_view` | A tracked section scrolls into view (deduped — see below) | `section`, `path`, `page`, `timestamp`, `device_type` |
 | `scroll_depth` | Page scrolled past a 25 / 50 / 75 / 100% milestone (once each per page view) | `depth`, `path`, `page` |
 | `cta_click` | Any `Button` rendered as a link/button is clicked | `text`, `destination`, `section` |
+| `request_demo_click` | Primary "Request a Demo" CTA (hero + niche pages) | `text`, `destination` |
+| `see_demos_click` | "See What We Build" CTA | `text`, `destination` |
 | `nav_click` | Header / mobile-menu / footer navigation link | `text`, `destination`, `section` |
 | `service_click` | A service card is clicked (first click per view) | `text`, `service_id`, `section` |
+| `service_page_view` | `/services` mounts | — |
+| `lead_system_page_view` | `/lead-systems` mounts | — |
+| `contractor_page_view` | `/contractors` mounts | — |
+| `demo_page_view` | `/demos` mounts | — |
 | `external_link_click` | External anchor (`mailto:`, `tel:`, off-site `http`) | `text`, `destination`, `section` |
-| `contact_form_start` | First interaction with a form (once) | `form` (`contact` \| `intake` \| `full-intake`) |
-| `contact_form_submit` | Submit attempt that passes validation | `form` |
-| `contact_form_submit_success` | Submission confirmed sent (webhook `200`) | `form`, `channel` |
+| `intake_form_start` / `_submit` / `_submit_success` | Short intake funnel | `form`, `channel` (success) |
+| `full_intake_form_start` / `_submit` / `_submit_success` | Full intake funnel | `form`, `channel` (success) |
+| `contact_form_start` / `_submit` / `_submit_success` | Contact funnel | `form`, `channel` (success) |
 
-All events also carry `path` automatically.
+All events also carry `path` automatically. Form events are namespaced by form
+type (`intake_form_*`, `full_intake_form_*`, `contact_form_*`) so the marketing
+funnel is legible per form. Marketing attribution (UTM, referrer, landing page)
+and heuristic lead scores are attached to the **form-submission payload only** —
+never to analytics events, which stay PII-free.
 
-> **Note on form success:** `contact_form_submit_success` only fires when the
-> optional n8n webhook (`VITE_N8N_INTAKE_WEBHOOK_URL`) is configured and returns
-> OK. Without a webhook the forms fall back to copy/email, which the browser
-> cannot confirm, so success is not detectable in that mode.
+> **Note on form success:** `*_form_submit_success` only fires when the optional
+> n8n webhook (`VITE_N8N_INTAKE_WEBHOOK_URL`) is configured and returns OK.
+> Without a webhook the forms fall back to copy/email, which the browser cannot
+> confirm, so success is not detectable in that mode.
 
 ### Section views: which sections & how they're deduplicated
 

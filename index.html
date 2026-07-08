@@ -13,22 +13,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0f172a" />
 
-    <title>Laine Industries — Websites, CRM Dashboards &amp; AI Follow-Up Systems</title>
+    <title>Laine Industries | AI Websites &amp; Lead Systems for Small Businesses</title>
     <meta
       name="description"
-      content="Laine Industries builds simple websites, lead tracking dashboards, and AI-assisted follow-up systems for small businesses."
+      content="Laine Industries builds AI-powered websites, intake forms, lead dashboards, and follow-up systems for small businesses and local service operators."
     />
+    <!-- Per-page canonical/title/description are managed at runtime by src/components/SEO.tsx. -->
+    <link rel="canonical" href="https://laineindustries.co/" />
 
     <!-- OpenGraph -->
     <meta property="og:type" content="website" />
     <meta
       property="og:title"
-      content="Laine Industries — Websites, CRM Dashboards & AI Follow-Up Systems"
+      content="Laine Industries | AI Websites & Lead Systems for Small Businesses"
     />
     <meta
       property="og:description"
-      content="Simple websites, lead tracking dashboards, and AI-assisted follow-up systems for small businesses."
+      content="AI-powered websites, intake forms, lead dashboards, and follow-up systems for small businesses and local service operators."
     />
+    <meta property="og:url" content="https://laineindustries.co/" />
     <meta property="og:site_name" content="Laine Industries" />
     <!-- TODO: add an og:image (1200x630) once brand art exists, e.g. /og-image.png -->
 
@@ -36,12 +39,37 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
-      content="Laine Industries — Websites, CRM Dashboards & AI Follow-Up Systems"
+      content="Laine Industries | AI Websites & Lead Systems for Small Businesses"
     />
     <meta
       name="twitter:description"
-      content="Simple websites, lead tracking dashboards, and AI-assisted follow-up systems for small businesses."
+      content="AI-powered websites, intake forms, lead dashboards, and follow-up systems for small businesses and local service operators."
     />
+
+    <!-- Organization + WebSite structured data (site-wide). -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://laineindustries.co/#organization",
+            "name": "Laine Industries",
+            "url": "https://laineindustries.co/",
+            "email": "hello@laineindustries.co",
+            "description": "Laine Industries builds AI-powered websites, lead systems, intake flows, CRM dashboards, and follow-up automations for small businesses and local service businesses.",
+            "areaServed": "US"
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://laineindustries.co/#website",
+            "url": "https://laineindustries.co/",
+            "name": "Laine Industries",
+            "publisher": { "@id": "https://laineindustries.co/#organization" }
+          }
+        ]
+      }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

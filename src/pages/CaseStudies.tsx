@@ -1,4 +1,5 @@
 import { PageHero } from '../components/PageHero'
+import { SEO } from '../components/SEO'
 import { Section } from '../components/Section'
 import { CaseStudyCard } from '../components/CaseStudyCard'
 import { CTASection } from '../components/CTASection'
@@ -8,6 +9,10 @@ import { CTA } from '../data/site'
 export default function CaseStudies() {
   return (
     <>
+      <SEO
+        title="Case Studies & Pilot Builds | Laine Industries"
+        description="Pilot builds and real-world systems in progress — the before, build, and after of practical websites and lead systems for small businesses."
+      />
       <PageHero
         eyebrow="Case Studies / Pilot Builds"
         title="Pilot builds and real-world systems in progress."

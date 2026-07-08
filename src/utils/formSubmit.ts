@@ -1,4 +1,4 @@
-import { CONTACT_EMAIL, N8N_INTAKE_WEBHOOK_URL } from '../data/site'
+import { CONTACT_EMAIL, INTAKE_ENDPOINT } from '../data/site'
 
 export type FieldValue = string | string[]
 
@@ -61,15 +61,15 @@ export interface SubmitResult {
 /**
  * Submit form data.
  *
- * - If VITE_N8N_INTAKE_WEBHOOK_URL is configured, POST the payload there.
- * - Otherwise (or if the webhook fails), the caller should fall back to the
- *   copy/email options that are always rendered in the confirmation view.
- *
- * TODO (future integrations):
- *   - Wire the live n8n intake webhook and confirm the workflow handles CORS.
- *   - Consider a lightweight serverless proxy if you'd rather not expose the
- *     webhook URL client-side.
- *   - Add analytics event on successful submit.
+ * The browser always POSTs to the same-origin proxy at INTAKE_ENDPOINT
+ * (/api/intake). That serverless function holds the real n8n webhook URL as a
+ * server-only secret and forwards the payload — the URL is never exposed in the
+ * client bundle. The server decides whether a webhook is configured:
+ *   - 503 { configured: false } → no webhook set; caller shows the copy/email
+ *     fallback (channel: 'fallback', no error note).
+ *   - non-OK otherwise          → forward failed (channel: 'webhook', shows note
+ *     + fallback).
+ *   - OK                        → forwarded (channel: 'webhook', ok).
  */
 export async function submitForm(
   payload: Record<string, FieldValue>,
@@ -83,12 +83,8 @@ export async function submitForm(
     leadStatus?: string
   },
 ): Promise<SubmitResult> {
-  if (!N8N_INTAKE_WEBHOOK_URL) {
-    return { channel: 'fallback', ok: false }
-  }
-
   try {
-    const res = await fetch(N8N_INTAKE_WEBHOOK_URL, {
+    const res = await fetch(INTAKE_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -102,15 +98,21 @@ export async function submitForm(
       }),
     })
 
-    if (!res.ok) {
-      return {
-        channel: 'webhook',
-        ok: false,
-        error: `Webhook responded with ${res.status}`,
-      }
+    if (res.ok) {
+      return { channel: 'webhook', ok: true }
     }
 
-    return { channel: 'webhook', ok: true }
+    // 503 means the proxy has no webhook configured — treat as a clean fallback
+    // (copy/email), not a delivery error.
+    if (res.status === 503) {
+      return { channel: 'fallback', ok: false }
+    }
+
+    return {
+      channel: 'webhook',
+      ok: false,
+      error: `Submission failed (${res.status})`,
+    }
   } catch (err) {
     return {
       channel: 'webhook',

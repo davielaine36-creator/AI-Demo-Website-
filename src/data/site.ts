@@ -9,11 +9,14 @@ export const CONTACT_EMAIL: string =
   import.meta.env.VITE_CONTACT_EMAIL || 'hello@laineindustries.co'
 
 /**
- * Optional n8n webhook. When present, forms POST their payload here.
- * When absent, forms fall back to copy-to-clipboard + email draft.
+ * Same-origin intake endpoint. The browser always POSTs form submissions here;
+ * the serverless function at api/intake.ts holds the real n8n webhook URL as a
+ * SERVER-ONLY secret (N8N_INTAKE_WEBHOOK_URL — note: no VITE_ prefix, so it is
+ * never bundled into the public client) and forwards the payload. When the
+ * server has no webhook configured it responds 503 and the form falls back to
+ * the copy-to-clipboard + email draft options.
  */
-export const N8N_INTAKE_WEBHOOK_URL: string | undefined =
-  import.meta.env.VITE_N8N_INTAKE_WEBHOOK_URL
+export const INTAKE_ENDPOINT = '/api/intake'
 
 /** Canonical production origin — used for canonical URLs, OG tags, and sitemap. */
 export const SITE_URL = 'https://laineindustries.co'

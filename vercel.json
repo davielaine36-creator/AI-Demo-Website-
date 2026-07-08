@@ -4,7 +4,8 @@
     "buildCommand": "npm run build",
     "outputDirectory": "dist",
     "functions": {
-        "api/ask-lane.ts": { "maxDuration": 30 }
+        "api/ask-lane.ts": { "maxDuration": 30 },
+        "api/intake.ts": { "maxDuration": 15 }
     },
     "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }

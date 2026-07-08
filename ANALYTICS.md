@@ -66,9 +66,10 @@ and heuristic lead scores are attached to the **form-submission payload only** �
 never to analytics events, which stay PII-free.
 
 > **Note on form success:** `*_form_submit_success` only fires when the optional
-> n8n webhook (`VITE_N8N_INTAKE_WEBHOOK_URL`) is configured and returns OK.
-> Without a webhook the forms fall back to copy/email, which the browser cannot
-> confirm, so success is not detectable in that mode.
+> n8n webhook (server-only `N8N_INTAKE_WEBHOOK_URL`, reached via the `/api/intake`
+> proxy) is configured and returns OK. Without a webhook the forms fall back to
+> copy/email, which the browser cannot confirm, so success is not detectable in
+> that mode.
 
 ### Section views: which sections & how they're deduplicated
 
@@ -101,8 +102,8 @@ Tracked section names:
 **None are required for analytics.** Vercel Web Analytics is zero-config once
 enabled in the Vercel dashboard — no key, no `.env` entry.
 
-The only related (and optional) variable is the pre-existing
-`VITE_N8N_INTAKE_WEBHOOK_URL`, which — when set — makes
+The only related (and optional) variable is the server-only
+`N8N_INTAKE_WEBHOOK_URL`, which — when set — makes
 `contact_form_submit_success` detectable. See `.env.example`.
 
 ## Verify it works locally

@@ -1,4 +1,5 @@
 import { PageHero } from '../components/PageHero'
+import { SEO } from '../components/SEO'
 import { Section } from '../components/Section'
 import { Card } from '../components/Card'
 import { Button } from '../components/Button'
@@ -59,6 +60,10 @@ const ITEMS: Item[] = [
 export default function Privacy() {
   return (
     <>
+      <SEO
+        title="Privacy / Data Use | Laine Industries"
+        description="A plain-English note on what happens to the details you share through our contact form, intake forms, PDF/email, and the Ask Laine assistant."
+      />
       <PageHero
         eyebrow="Privacy / Data Use"
         title="How we handle your information."

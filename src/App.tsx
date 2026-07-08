@@ -8,6 +8,9 @@ import { AnalyticsProvider } from './components/Analytics'
 
 import Home from './pages/Home'
 import Services from './pages/Services'
+import LeadSystems from './pages/LeadSystems'
+import Contractors from './pages/Contractors'
+import Industries from './pages/Industries'
 import ForSmallBusinesses from './pages/ForSmallBusinesses'
 import HowItWorks from './pages/HowItWorks'
 import Intake from './pages/Intake'
@@ -33,6 +36,9 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/lead-systems" element={<LeadSystems />} />
+          <Route path="/contractors" element={<Contractors />} />
+          <Route path="/industries" element={<Industries />} />
           <Route path="/for-small-businesses" element={<ForSmallBusinesses />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/intake" element={<Intake />} />

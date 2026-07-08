@@ -24,7 +24,12 @@ export function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-ink">Pages</h3>
             <ul className="mt-4 space-y-2.5">
-              {NAV_LINKS.map((link) => (
+              {[
+                ...NAV_LINKS,
+                { label: 'Contractors', to: '/contractors' },
+                { label: 'For Small Businesses', to: '/for-small-businesses' },
+                { label: 'Case Studies', to: '/case-studies' },
+              ].map((link) => (
                 <li key={link.to}>
                   <Link
                     to={link.to}

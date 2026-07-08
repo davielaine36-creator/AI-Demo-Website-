@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { Analytics as VercelAnalytics } from '@vercel/analytics/react'
 import { trackPageView } from '../lib/analytics'
 import { initScrollDepth } from '../lib/useSectionTracking'
+import { captureFirstTouch } from '../lib/leadContext'
 
 /**
  * On every SPA route change: fire a first-party `page_view` and (re)arm
@@ -12,6 +13,10 @@ import { initScrollDepth } from '../lib/useSectionTracking'
  */
 function usePageViews() {
   const location = useLocation()
+  // Record first-touch attribution (landing page + referrer) once per session.
+  useEffect(() => {
+    captureFirstTouch()
+  }, [])
   useEffect(() => {
     trackPageView(location.pathname + location.search)
     const cleanup = initScrollDepth(location.pathname)

@@ -73,7 +73,15 @@ export interface SubmitResult {
  */
 export async function submitForm(
   payload: Record<string, FieldValue>,
-  meta: { formType: string; summary: string },
+  meta: {
+    formType: string
+    summary: string
+    /** Non-PII attribution fields (UTM, referrer, landing page, timestamp). */
+    source?: Record<string, string>
+    /** Heuristic lead score + suggested triage status, when computed. */
+    leadScore?: number
+    leadStatus?: string
+  },
 ): Promise<SubmitResult> {
   if (!N8N_INTAKE_WEBHOOK_URL) {
     return { channel: 'fallback', ok: false }
@@ -87,6 +95,9 @@ export async function submitForm(
         formType: meta.formType,
         submittedAt: new Date().toISOString(),
         summary: meta.summary,
+        source: meta.source,
+        leadScore: meta.leadScore,
+        leadStatus: meta.leadStatus,
         data: payload,
       }),
     })

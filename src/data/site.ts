@@ -15,12 +15,15 @@ export const CONTACT_EMAIL: string =
 export const N8N_INTAKE_WEBHOOK_URL: string | undefined =
   import.meta.env.VITE_N8N_INTAKE_WEBHOOK_URL
 
+/** Canonical production origin — used for canonical URLs, OG tags, and sitemap. */
+export const SITE_URL = 'https://laineindustries.co'
+
 export const SITE = {
   name: 'Laine Industries',
   tagline:
-    'Simple websites, CRM dashboards, and AI follow-up systems for small businesses.',
+    'AI-powered websites, lead systems, and follow-up automation for small businesses.',
   message:
-    'We help small businesses turn scattered leads, missed follow-ups, and outdated websites into one simple system.',
+    'Laine Industries helps small businesses capture leads, organize customer info, and follow up faster — so opportunities stop falling through the cracks.',
   location: 'San Diego / Southern California — remote-friendly',
   // Path where the full intake PDF should live once added (see public/resources/README.md).
   intakePdfPath: '/resources/client-ai-systems-intake-questionnaire.pdf',
@@ -29,16 +32,16 @@ export const SITE = {
 export const NAV_LINKS = [
   { label: 'Home', to: '/' },
   { label: 'Services', to: '/services' },
-  { label: 'For Small Businesses', to: '/for-small-businesses' },
+  { label: 'Lead Systems', to: '/lead-systems' },
+  { label: 'Industries', to: '/industries' },
   { label: 'How It Works', to: '/how-it-works' },
   { label: 'Demos', to: '/demos' },
-  { label: 'Case Studies', to: '/case-studies' },
   { label: 'About', to: '/about' },
 ] as const
 
 // Primary calls-to-action reused across pages.
 export const CTA = {
-  intake: { label: 'Start With the Intake Form', to: '/intake' },
+  intake: { label: 'Request a Demo', to: '/intake' },
   demos: { label: 'See What We Build', to: '/demos' },
   contact: { label: 'Contact Us', to: '/contact' },
 } as const

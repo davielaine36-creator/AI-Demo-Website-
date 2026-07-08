@@ -10,29 +10,52 @@ export const SERVICES: Service[] = [
   {
     id: 'website-starter',
     title: 'Website Starter System',
-    summary: 'A clean, mobile-friendly site that explains what you do.',
+    summary:
+      'A clean business website or landing page that explains what you do and gives customers a clear next step.',
     includes: [
-      'Simple website or landing page',
-      'Clear services section',
+      'Homepage or landing page',
+      'Service sections',
+      'Clear call-to-action structure',
       'Contact / quote form',
-      'Mobile-friendly design',
+      'Mobile-first layout',
       'Basic SEO structure',
-      'Call-to-action sections',
+      'Analytics hooks',
+      'Deployment support',
     ],
     benefit:
       'Helps customers understand what you do and gives them a clear path to reach out.',
   },
   {
+    id: 'lead-capture',
+    title: 'Lead Capture System',
+    summary:
+      'A page + form flow designed to turn visitors into organized quote requests.',
+    includes: [
+      'Landing page',
+      'Quote / request form',
+      'Service-area fields',
+      'Budget / timeline fields',
+      'Lead source tracking',
+      'Confirmation state',
+      'Admin notification',
+      'CRM handoff',
+    ],
+    benefit:
+      'Turns interest into structured, followed-up requests instead of scattered calls and texts.',
+  },
+  {
     id: 'crm-lead-tracker',
     title: 'CRM / Lead Tracker',
-    summary: 'One organized place for names, jobs, notes, and follow-ups.',
+    summary:
+      'One organized place for names, phone numbers, project details, status, notes, and next follow-up.',
     includes: [
-      'Simple dashboard',
-      'Lead / contact tracking',
-      'Job or project status',
+      'Lead list',
+      'Status pipeline',
       'Notes',
-      'Follow-up fields',
+      'Lead source',
+      'Follow-up date',
       'Owner view',
+      'Simple dashboard',
     ],
     benefit:
       'Keeps customer information organized so leads and jobs do not live only in texts, memory, or scattered notes.',
@@ -40,28 +63,51 @@ export const SERVICES: Service[] = [
   {
     id: 'ai-follow-up',
     title: 'AI Follow-Up Assistant',
-    summary: 'Drafts your follow-up messages so you never start from zero.',
+    summary:
+      'AI-drafted follow-up messages so owners can respond faster without writing from scratch.',
     includes: [
-      'Drafted follow-up emails or messages',
-      'Reply templates',
-      'Customer status context',
-      'Optional owner approval before sending',
+      'Follow-up templates',
+      'Reply drafts',
+      'Context from the lead / customer record',
+      'Optional owner approval',
+      'Tone guidelines',
     ],
     benefit:
       'Helps the owner respond faster without writing every message from scratch.',
   },
   {
     id: 'alerts-reminders',
-    title: 'Alerts & Reminders',
-    summary: 'Know the moment a lead comes in or a job needs attention.',
+    title: 'Alerts & Automations',
+    summary:
+      'Notifications when a lead comes in, when someone needs a response, or when a customer needs attention.',
     includes: [
       'New lead alerts',
       'Follow-up reminders',
-      'Job / customer status alerts',
-      'Optional n8n workflow integration',
+      'Status alerts',
+      'n8n workflow integration',
+      'Resend / email support',
+      'Future SMS option if supported',
     ],
     benefit:
       'Reduces missed opportunities and helps the business stay on top of important next steps.',
+  },
+  {
+    id: 'local-growth',
+    title: 'Local Growth / Lead System',
+    summary:
+      'A practical lead-generation foundation for local service businesses.',
+    includes: [
+      'Service landing pages',
+      'Quote forms',
+      'Lead tracking',
+      'Lead qualification',
+      'CRM routing',
+      'Follow-up automation',
+      'Reporting',
+      'Optional Google Ads / SEO readiness',
+    ],
+    benefit:
+      'Builds the system needed to capture and manage leads — not a promise of leads, but the foundation to convert the interest you earn.',
   },
   {
     id: 'shopify-ops',

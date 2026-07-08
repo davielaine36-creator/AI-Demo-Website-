@@ -1,5 +1,8 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { PageHero } from '../components/PageHero'
+import { SEO } from '../components/SEO'
+import { trackEvent } from '../lib/analytics'
 import { Section, SectionHeading } from '../components/Section'
 import { ServiceCard } from '../components/ServiceCard'
 import { Card } from '../components/Card'
@@ -11,21 +14,32 @@ import {
   IconSparkles,
   IconBell,
   IconCart,
+  IconClipboard,
+  IconUsers,
 } from '../components/Icons'
 import { SERVICES, STARTER_PACKAGES } from '../data/services'
 import { CTA } from '../data/site'
 
 const ICONS: Record<string, JSX.Element> = {
   'website-starter': <IconGlobe />,
+  'lead-capture': <IconClipboard />,
   'crm-lead-tracker': <IconLayout />,
   'ai-follow-up': <IconSparkles />,
   'alerts-reminders': <IconBell />,
+  'local-growth': <IconUsers />,
   'shopify-ops': <IconCart />,
 }
 
 export default function Services() {
+  useEffect(() => {
+    trackEvent('service_page_view')
+  }, [])
   return (
     <>
+      <SEO
+        title="Services | Websites, CRM Dashboards & AI Follow-Up Systems | Laine Industries"
+        description="Explore Laine Industries services: business websites, lead capture forms, CRM dashboards, follow-up assistants, alerts, automations, and local growth systems."
+      />
       <PageHero
         eyebrow="Services"
         title="Systems that fit how your business actually works."

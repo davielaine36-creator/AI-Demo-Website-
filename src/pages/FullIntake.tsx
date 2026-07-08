@@ -1,4 +1,5 @@
 import { PageHero } from '../components/PageHero'
+import { SEO } from '../components/SEO'
 import { Section } from '../components/Section'
 import { Card } from '../components/Card'
 import { Button } from '../components/Button'
@@ -9,6 +10,10 @@ import { SITE } from '../data/site'
 export default function FullIntake() {
   return (
     <>
+      <SEO
+        title="Full Intake Questionnaire | Laine Industries"
+        description="The detailed discovery questionnaire for when you're ready to go deeper. Only name, business, and email are required — everything else is optional."
+      />
       <PageHero
         eyebrow="Full intake"
         title="The full discovery questionnaire — online."

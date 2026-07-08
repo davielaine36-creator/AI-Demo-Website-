@@ -1,4 +1,5 @@
 import { PageHero } from '../components/PageHero'
+import { SEO } from '../components/SEO'
 import { Section } from '../components/Section'
 import { Card } from '../components/Card'
 import { Button } from '../components/Button'
@@ -9,6 +10,10 @@ import { SITE } from '../data/site'
 export default function Intake() {
   return (
     <>
+      <SEO
+        title="Request a Demo / Start Your Intake | Laine Industries"
+        description="Start with a short intake so Laine Industries can understand your business and recommend the simplest useful website or lead system to start with."
+      />
       <PageHero
         eyebrow="Intake"
         title="Three ways to get started."

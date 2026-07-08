@@ -1,4 +1,5 @@
 import { PageHero } from '../components/PageHero'
+import { SEO } from '../components/SEO'
 import { Section, SectionHeading } from '../components/Section'
 import { ProcessStep } from '../components/ProcessStep'
 import { Card } from '../components/Card'
@@ -36,6 +37,10 @@ const STEPS = [
 export default function HowItWorks() {
   return (
     <>
+      <SEO
+        title="How It Works | Demo-First AI Websites & Lead Systems | Laine Industries"
+        description="A calm, five-step process from first conversation to a working website, dashboard, or follow-up system you actually understand — no jargon, no overbuilding."
+      />
       <PageHero
         eyebrow="How it works"
         title="A calm, five-step process."

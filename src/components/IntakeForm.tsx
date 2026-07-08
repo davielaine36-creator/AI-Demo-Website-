@@ -11,9 +11,11 @@ import {
   type SummarySection,
 } from '../utils/formSubmit'
 import { useFormTracking } from '../lib/useFormTracking'
+import { getLeadSource, computeLeadScore, leadStatusFromScore } from '../lib/leadContext'
 
 const HELP_OPTIONS = [
   'Website',
+  'Lead capture / landing page',
   'CRM / lead tracking',
   'Follow-up messages',
   'Email drafting',
@@ -37,6 +39,15 @@ const STORAGE_OPTIONS = [
 ]
 
 const TIMING_OPTIONS = ['Just exploring', 'Soon', 'This month', 'Urgent']
+const READINESS_OPTIONS = ['Just exploring', 'Somewhere in between', 'Ready to start']
+const CONTACT_OPTIONS = ['Email', 'Phone call', 'Text message', "Whatever's easiest"]
+const BUDGET_OPTIONS = [
+  'Not sure yet',
+  'Starter / small',
+  'Mid-range',
+  'Larger build',
+  'Prefer to discuss',
+]
 
 interface IntakeState {
   name: string
@@ -45,6 +56,7 @@ interface IntakeState {
   phone: string
   website: string
   businessType: string
+  serviceArea: string
   help: string[]
   newCustomerProcess: string
   storage: string[]
@@ -52,6 +64,10 @@ interface IntakeState {
   messyThings: string
   valuable: string
   timing: string
+  readiness: string
+  budget: string
+  contactMethod: string
+  consent: string[]
 }
 
 const initialState: IntakeState = {
@@ -61,6 +77,7 @@ const initialState: IntakeState = {
   phone: '',
   website: '',
   businessType: '',
+  serviceArea: '',
   help: [],
   newCustomerProcess: '',
   storage: [],
@@ -68,6 +85,10 @@ const initialState: IntakeState = {
   messyThings: '',
   valuable: '',
   timing: '',
+  readiness: '',
+  budget: '',
+  contactMethod: '',
+  consent: [],
 }
 
 export function IntakeForm() {
@@ -85,7 +106,7 @@ export function IntakeForm() {
     setForm((f) => ({ ...f, [key]: value }))
   }
 
-  const toggle = (key: 'help' | 'storage', option: string) => {
+  const toggle = (key: 'help' | 'storage' | 'consent', option: string) => {
     trackStart()
     setForm((f) => ({
       ...f,
@@ -114,7 +135,9 @@ export function IntakeForm() {
         { label: 'Email', value: form.email },
         { label: 'Phone', value: form.phone },
         { label: 'Website', value: form.website },
-        { label: 'Business type', value: form.businessType },
+        { label: 'Business type / industry', value: form.businessType },
+        { label: 'Service area', value: form.serviceArea },
+        { label: 'Preferred contact', value: form.contactMethod },
       ],
     },
     {
@@ -140,8 +163,13 @@ export function IntakeForm() {
       ],
     },
     {
-      heading: 'Timing',
-      fields: [{ label: 'Timeline', value: form.timing }],
+      heading: 'Timeline, budget & readiness',
+      fields: [
+        { label: 'Timeline', value: form.timing },
+        { label: 'Exploring or ready', value: form.readiness },
+        { label: 'Budget comfort range', value: form.budget },
+        { label: 'Consent to be contacted', value: form.consent },
+      ],
     },
   ]
 
@@ -158,9 +186,30 @@ export function IntakeForm() {
     setSubmitting(true)
     const summary = buildSummary('Laine Industries — Intake Summary', buildSections())
 
+    // Compute non-PII attribution + a heuristic lead score for triage.
+    const source = getLeadSource('intake')
+    const leadScore = computeLeadScore({
+      name: form.name,
+      business: form.business,
+      email: form.email,
+      phone: form.phone,
+      website: form.website,
+      businessType: form.businessType,
+      painPoint: `${form.messyThings} ${form.valuable}`.trim(),
+      needs: form.help,
+      budget: form.budget,
+      timeline: `${form.timing} ${form.readiness}`.trim(),
+    })
+
     const res = await submitForm(
       { ...form } as unknown as Record<string, string | string[]>,
-      { formType: 'intake', summary },
+      {
+        formType: 'intake',
+        summary,
+        source,
+        leadScore,
+        leadStatus: leadStatusFromScore(leadScore),
+      },
     )
 
     if (res.ok) trackSuccess(res.channel)
@@ -248,13 +297,32 @@ export function IntakeForm() {
               placeholder="https://"
             />
           </Field>
-          <Field label="Business type" htmlFor="businessType">
+          <Field label="Business type / industry" htmlFor="businessType">
             <TextInput
               id="businessType"
               name="businessType"
               value={form.businessType}
               onChange={(v) => set('businessType', v)}
-              placeholder="e.g. window cleaning, training, Shopify store"
+              placeholder="e.g. contractor, HVAC, window cleaning, training"
+            />
+          </Field>
+          <Field label="City / state or service area" htmlFor="serviceArea">
+            <TextInput
+              id="serviceArea"
+              name="serviceArea"
+              value={form.serviceArea}
+              onChange={(v) => set('serviceArea', v)}
+              placeholder="e.g. San Diego, CA"
+            />
+          </Field>
+          <Field label="Preferred contact method" htmlFor="contactMethod">
+            <Select
+              id="contactMethod"
+              name="contactMethod"
+              value={form.contactMethod}
+              onChange={(v) => set('contactMethod', v)}
+              options={CONTACT_OPTIONS}
+              placeholder="Select one"
             />
           </Field>
         </div>
@@ -311,7 +379,7 @@ export function IntakeForm() {
       <fieldset className="space-y-5">
         <legend className="text-lg font-semibold text-ink">Pain points</legend>
         <Field
-          label="What feels messy, repetitive, or easy to forget in your business right now?"
+          label="What is the biggest problem you'd want this to fix?"
           htmlFor="messyThings"
         >
           <TextArea
@@ -319,6 +387,7 @@ export function IntakeForm() {
             name="messyThings"
             value={form.messyThings}
             onChange={(v) => set('messyThings', v)}
+            placeholder="e.g. leads get lost, follow-up is slow, quote requests are missing details"
           />
         </Field>
         <Field
@@ -334,17 +403,53 @@ export function IntakeForm() {
         </Field>
       </fieldset>
 
-      {/* Timing */}
-      <fieldset className="space-y-4">
-        <legend className="text-lg font-semibold text-ink">Timing</legend>
-        <Field label="What's your timeline?" htmlFor="timing">
-          <Select
-            id="timing"
-            name="timing"
-            value={form.timing}
-            onChange={(v) => set('timing', v)}
-            options={TIMING_OPTIONS}
-            placeholder="Select one"
+      {/* Timeline / budget / readiness */}
+      <fieldset className="space-y-5">
+        <legend className="text-lg font-semibold text-ink">
+          Timeline & budget
+        </legend>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Field label="What's your timeline?" htmlFor="timing">
+            <Select
+              id="timing"
+              name="timing"
+              value={form.timing}
+              onChange={(v) => set('timing', v)}
+              options={TIMING_OPTIONS}
+              placeholder="Select one"
+            />
+          </Field>
+          <Field label="Are you exploring or ready to start?" htmlFor="readiness">
+            <Select
+              id="readiness"
+              name="readiness"
+              value={form.readiness}
+              onChange={(v) => set('readiness', v)}
+              options={READINESS_OPTIONS}
+              placeholder="Select one"
+            />
+          </Field>
+          <Field
+            label="Budget comfort range"
+            htmlFor="budget"
+            hint="No commitment — this just helps us recommend the right starting point."
+          >
+            <Select
+              id="budget"
+              name="budget"
+              value={form.budget}
+              onChange={(v) => set('budget', v)}
+              options={BUDGET_OPTIONS}
+              placeholder="Select one"
+            />
+          </Field>
+        </div>
+        <Field label="Consent">
+          <CheckboxGroup
+            name="consent"
+            options={['You can contact me about my request.']}
+            selected={form.consent}
+            onToggle={(o) => toggle('consent', o)}
           />
         </Field>
       </fieldset>

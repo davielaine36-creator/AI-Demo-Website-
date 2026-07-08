@@ -1,4 +1,5 @@
 import { PageHero } from '../components/PageHero'
+import { SEO } from '../components/SEO'
 import { Section, SectionHeading } from '../components/Section'
 import { Card } from '../components/Card'
 import { CTASection } from '../components/CTASection'
@@ -37,6 +38,10 @@ const PRINCIPLES = [
 export default function About() {
   return (
     <>
+      <SEO
+        title="About | Laine Industries"
+        description="A small AI systems studio helping small businesses use modern tools without making things complicated — useful first, fancy second."
+      />
       <PageHero
         eyebrow="About"
         title="A small AI systems studio built by David and Eliseo."

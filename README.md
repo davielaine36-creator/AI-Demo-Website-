@@ -70,16 +70,19 @@ Variables). All client-exposed vars **must** be prefixed with `VITE_`.
 | Variable                      | Required | Description                                                                 |
 | ----------------------------- | -------- | --------------------------------------------------------------------------- |
 | `VITE_CONTACT_EMAIL`          | No       | Email used for `mailto:` fallbacks. Defaults to `hello@laineindustries.co`. |
-| `VITE_N8N_INTAKE_WEBHOOK_URL` | No       | If set, intake + contact forms `POST` their payload to this webhook.        |
+| `N8N_INTAKE_WEBHOOK_URL`      | No       | **Server-side only — never `VITE_`-prefixed.** If set, the `/api/intake` proxy forwards intake + contact submissions to this n8n webhook. |
 | `ANTHROPIC_API_KEY`           | For live AI chat | **Server-side only — never `VITE_`-prefixed.** Powers the Ask Laine chatbot. Without it, Ask Laine falls back to the guided quick-start. |
 | `ASK_LANE_MODEL`              | No       | Optional model override for Ask Laine (default `claude-opus-4-8`).           |
 
 **Form behavior:**
 
-- If `VITE_N8N_INTAKE_WEBHOOK_URL` is present, submissions are `POST`ed there as
-  JSON (`{ formType, submittedAt, summary, data }`).
-- If it's absent **or the request fails**, the form gracefully falls back to a
-  clean, copy-able summary plus a prefilled email draft — nothing is ever lost.
+- Submissions always `POST` (as JSON:
+  `{ formType, submittedAt, summary, source, leadScore, leadStatus, data }`) to
+  the same-origin proxy `/api/intake`, which forwards to `N8N_INTAKE_WEBHOOK_URL`
+  server-side (the webhook URL is never exposed in the client bundle).
+- If the webhook is unset **or the request fails**, the form gracefully falls
+  back to a clean, copy-able summary plus a prefilled email draft — nothing is
+  ever lost.
 
 > We intentionally never hardcode a personal email in the codebase — set
 > `VITE_CONTACT_EMAIL` instead.
@@ -100,7 +103,8 @@ all using the same webhook / copy / email logic:
 
 On submit, both forms build a clean formatted summary and:
 
-- `POST` it to `VITE_N8N_INTAKE_WEBHOOK_URL` if that env var is set;
+- `POST` it to the `/api/intake` proxy, which forwards to
+  `N8N_INTAKE_WEBHOOK_URL` when that server-side env var is set;
 - otherwise (or if the webhook fails) fall back to **copy-to-clipboard** and a
   **prefilled email draft** to `VITE_CONTACT_EMAIL` (default
   `hello@laineindustries.co`). Nothing is ever lost.
@@ -157,8 +161,9 @@ vercel --prod # production deploy
 
 These are marked with `TODO` comments in the code where relevant:
 
-- [ ] Wire the **live n8n intake webhook** (set `VITE_N8N_INTAKE_WEBHOOK_URL`) and
-      confirm the workflow handles CORS.
+- [ ] Wire the **live n8n intake webhook** (set the server-only
+      `N8N_INTAKE_WEBHOOK_URL`; the `/api/intake` proxy forwards to it server-side,
+      so no client-side CORS config is needed).
 - [ ] **CRM dashboard integration** — connect real lead storage / dashboard.
 - [ ] **Demo embeds** — replace "Demo coming soon" placeholders with live links
       or embeds (`src/data/demos.ts`).

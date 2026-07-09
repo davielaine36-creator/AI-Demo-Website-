@@ -20,8 +20,9 @@ import { getLeadSource, computeLeadScore, leadStatusFromScore } from '../lib/lea
  * stays readable and maintainable, and it reuses the existing form controls,
  * validation helpers, summary builder, submit logic, and FormResult view.
  *
- * No backend required: submits to VITE_N8N_INTAKE_WEBHOOK_URL when configured,
- * otherwise falls back to copy-to-clipboard + prefilled email draft.
+ * No backend required: submits to the /api/intake proxy (which forwards to the
+ * server-only n8n webhook when configured), otherwise falls back to
+ * copy-to-clipboard + prefilled email draft.
  */
 
 type FieldType = 'text' | 'email' | 'tel' | 'textarea' | 'select' | 'checkbox'

@@ -1,0 +1,158 @@
+{
+  "name": "Laine Industries — Website Intake → Factory HQ",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Laine Industries — Website Intake → Factory HQ\n\nReceives website form submissions forwarded by laineindustries.co `/api/intake`, normalizes the form type (contact / short-intake / full-intake), maps them to the Factory HQ inbound contract, and POSTs to Factory HQ as ONE warm-inbound opportunity.\n\n**No secrets in this file.** The Factory secret lives in a Header Auth credential named \"Factory Inbound Secret\" (header `x-radar-secret`) that you attach to the \"Send to Factory HQ\" node after import.\n\nInbound capture only — no email to the prospect, no sending, no billing, no project start. Works while Factory HQ is paused.",
+        "height": 300,
+        "width": 420,
+        "color": 4
+      },
+      "id": "b1a11111-0000-4000-8000-000000000001",
+      "name": "About this workflow",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-40, 40]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "laine-industries-website-intake",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "b1a11111-0000-4000-8000-000000000002",
+      "name": "Receive Website Intake",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [220, 320],
+      "webhookId": "laine-industries-website-intake"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Laine Industries — validate the website /api/intake payload, normalize the\n// form type across contact / short-intake / full-intake, and map it to the\n// Factory HQ /api/radar/inbound/website-intake contract. NO SECRETS HERE.\n\nconst item = $input.first().json || {};\n// The website proxy forwards { formType, submittedAt, summary, source, leadScore,\n// leadStatus, data }. n8n wraps the POST body under `.body`; be defensive.\nconst p = (item.body && typeof item.body === 'object') ? item.body : item;\nconst data = (p && p.data && typeof p.data === 'object') ? p.data : {};\n\n// Defensive size guard (the website proxy already caps bodies at 64KB).\nif (JSON.stringify(p || {}).length > 200000) {\n  return [{ json: { valid: false, error: 'invalid_submission', reason: 'payload_too_large' } }];\n}\n\nconst pick = (...vals) => {\n  for (const v of vals) {\n    if (v !== undefined && v !== null && String(v).trim() !== '') return String(v).trim();\n  }\n  return null;\n};\n\n// Normalize the form type to a stable internal identifier.\nconst rawType = String(p.formType || '').toLowerCase().trim();\nlet formType = 'unknown';\nif (rawType === 'contact') formType = 'contact';\nelse if (['intake', 'short-intake', 'short_intake'].includes(rawType)) formType = 'short-intake';\nelse if (['full-intake', 'full_intake', 'fullintake'].includes(rawType)) formType = 'full-intake';\nelse if (rawType) formType = rawType;\n\n// business_name is the ONLY hard requirement of the Factory receiver.\nconst business_name = pick(data.business, data.businessName, data.company);\nif (!business_name) {\n  return [{ json: { valid: false, error: 'invalid_submission', reason: 'missing_business_name' } }];\n}\n\n// Problem, in the submitter's OWN words — combined per form, never fabricated.\nlet problem = null;\nif (formType === 'contact') problem = pick(data.message);\nelse if (formType === 'short-intake') problem = pick(data.messyThings, data.valuable);\nelse if (formType === 'full-intake') problem = pick(data.topPriority, data.websiteNotWorking, data.stopDoingManually, data.highestValueOutcome);\nif (!problem) problem = pick(p.summary);\n\n// source_page: prefer the first-touch landing path, else the form's canonical route.\nconst src = (p.source && typeof p.source === 'object') ? p.source : {};\nconst routeByForm = { 'contact': '/contact', 'short-intake': '/intake', 'full-intake': '/full-intake' };\nconst landing = pick(src.landing_page);\nconst source_page = landing\n  ? ('https://laineindustries.co' + (landing.startsWith('/') ? landing : '/' + landing))\n  : ('https://laineindustries.co' + (routeByForm[formType] || ''));\n\n// message: preserve the full human-readable summary for owner review in\n// /ops/first-10 (Factory truncates to 2000 chars; key fields are mapped below).\nconst message = pick(p.summary, data.message);\n\n// EXACT Factory HQ WebsiteIntakeSubmission shape — only these known fields.\nconst factoryBody = {\n  business_name,\n  contact_name: pick(data.name),\n  email: pick(data.email),\n  phone: pick(data.phone),\n  website: pick(data.website),\n  niche: pick(data.businessType),                       // contact form has none -> null\n  city: pick(data.serviceArea),                         // contact form has none -> null\n  problem,\n  leads_per_week: pick(data.leadsPerWeek, data.leads_per_week), // no current form asks -> null\n  message: message ? message.slice(0, 1900) : null,\n  source_page\n};\n\n// Internal-only fingerprint for debugging / future dedupe — NOT sent to Factory.\nconst dedupe_key = [formType, factoryBody.email || '', business_name, pick(p.submittedAt) || ''].join('|');\n\nreturn [{ json: { valid: true, formType, dedupe_key, factoryBody } }];"
+      },
+      "id": "b1a11111-0000-4000-8000-000000000003",
+      "name": "Validate & Map to Factory",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 320]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "cond-valid",
+              "leftValue": "={{ $json.valid }}",
+              "rightValue": "",
+              "operator": { "type": "boolean", "operation": "true", "singleValue": true }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b1a11111-0000-4000-8000-000000000004",
+      "name": "Valid Submission?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [700, 320]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://laine-industries-factory-hq.vercel.app/api/radar/inbound/website-intake",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [{ "name": "Content-Type", "value": "application/json" }]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.factoryBody }}",
+        "options": {
+          "timeout": 10000,
+          "response": { "response": { "neverError": false } }
+        }
+      },
+      "id": "b1a11111-0000-4000-8000-000000000005",
+      "name": "Send to Factory HQ",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [940, 220],
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "Factory Inbound Secret"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"ok\": true } }}",
+        "options": { "responseCode": 200 }
+      },
+      "id": "b1a11111-0000-4000-8000-000000000006",
+      "name": "Respond: Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1180, 140]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"ok\": false, \"error\": \"factory_unavailable\" } }}",
+        "options": { "responseCode": 502 }
+      },
+      "id": "b1a11111-0000-4000-8000-000000000007",
+      "name": "Respond: Factory Unavailable",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1180, 320]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"ok\": false, \"error\": \"invalid_submission\" } }}",
+        "options": { "responseCode": 400 }
+      },
+      "id": "b1a11111-0000-4000-8000-000000000008",
+      "name": "Respond: Invalid Submission",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [940, 460]
+    }
+  ],
+  "connections": {
+    "Receive Website Intake": {
+      "main": [[{ "node": "Validate & Map to Factory", "type": "main", "index": 0 }]]
+    },
+    "Validate & Map to Factory": {
+      "main": [[{ "node": "Valid Submission?", "type": "main", "index": 0 }]]
+    },
+    "Valid Submission?": {
+      "main": [
+        [{ "node": "Send to Factory HQ", "type": "main", "index": 0 }],
+        [{ "node": "Respond: Invalid Submission", "type": "main", "index": 0 }]
+      ]
+    },
+    "Send to Factory HQ": {
+      "main": [
+        [{ "node": "Respond: Success", "type": "main", "index": 0 }],
+        [{ "node": "Respond: Factory Unavailable", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "active": false,
+  "pinData": {},
+  "meta": {
+    "templateId": "laine-industries-website-intake-to-factory-hq",
+    "description": "Website form -> /api/intake -> this workflow -> Factory HQ warm-inbound opportunity. Sanitized: no credentials or secrets embedded."
+  }
+}

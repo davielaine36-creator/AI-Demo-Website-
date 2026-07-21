@@ -81,6 +81,8 @@ export async function submitForm(
     /** Heuristic lead score + suggested triage status, when computed. */
     leadScore?: number
     leadStatus?: string
+    /** Honeypot value (should be empty for humans). Sent as top-level `hp`. */
+    honeypot?: string
   },
 ): Promise<SubmitResult> {
   try {
@@ -94,6 +96,8 @@ export async function submitForm(
         source: meta.source,
         leadScore: meta.leadScore,
         leadStatus: meta.leadStatus,
+        // Anti-bot honeypot. n8n's "Honeypot?" node rejects non-empty values.
+        hp: meta.honeypot ?? '',
         data: payload,
       }),
     })

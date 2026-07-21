@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button } from './Button'
 import { Field, TextInput, TextArea, Select, CheckboxGroup } from './form/FormControls'
+import { useHoneypot } from './form/Honeypot'
 import { FormResult } from './form/FormResult'
 import { PrivacyNote } from './PrivacyNote'
 import {
@@ -100,6 +101,7 @@ export function IntakeForm() {
   )
 
   const { trackStart, trackSubmit, trackSuccess } = useFormTracking('intake')
+  const honeypot = useHoneypot()
 
   const set = <K extends keyof IntakeState>(key: K, value: IntakeState[K]) => {
     trackStart()
@@ -209,6 +211,7 @@ export function IntakeForm() {
         source,
         leadScore,
         leadStatus: leadStatusFromScore(leadScore),
+        honeypot: honeypot.value,
       },
     )
 
@@ -238,6 +241,7 @@ export function IntakeForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-10">
+      {honeypot.field}
       {/* Basic Info */}
       <fieldset className="space-y-5">
         <legend className="text-lg font-semibold text-ink">Basic info</legend>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button } from './Button'
 import { Field, TextInput, TextArea, Select, CheckboxGroup } from './form/FormControls'
+import { useHoneypot } from './form/Honeypot'
 import { FormResult } from './form/FormResult'
 import { PrivacyNote } from './PrivacyNote'
 import {
@@ -405,6 +406,7 @@ export function FullIntakeForm() {
   const asArray = (name: string) => (form[name] as string[]) ?? []
 
   const { trackStart, trackSubmit, trackSuccess } = useFormTracking('full-intake')
+  const honeypot = useHoneypot()
 
   const setValue = (name: string, value: FieldValue) => {
     trackStart()
@@ -476,6 +478,7 @@ export function FullIntakeForm() {
       source,
       leadScore,
       leadStatus: leadStatusFromScore(leadScore),
+      honeypot: honeypot.value,
     })
     if (res.ok) trackSuccess(res.channel)
     setSubmitting(false)
@@ -574,6 +577,7 @@ export function FullIntakeForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-12">
+      {honeypot.field}
       {SECTIONS.map((section, i) => (
         <fieldset key={section.heading} className="space-y-5">
           <div className="flex items-start gap-3 border-b border-slate-100 pb-4">

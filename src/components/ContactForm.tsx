@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button } from './Button'
 import { Field, TextInput, TextArea, Select } from './form/FormControls'
+import { useHoneypot } from './form/Honeypot'
 import { FormResult } from './form/FormResult'
 import { PrivacyNote } from './PrivacyNote'
 import {
@@ -46,6 +47,7 @@ export function ContactForm() {
   )
 
   const { trackStart, trackSubmit, trackSuccess } = useFormTracking('contact')
+  const honeypot = useHoneypot()
 
   const set = <K extends keyof ContactState>(key: K, value: ContactState[K]) => {
     trackStart()
@@ -90,7 +92,12 @@ export function ContactForm() {
 
     const res = await submitForm(
       { ...form } as unknown as Record<string, string | string[]>,
-      { formType: 'contact', summary, source: getLeadSource('contact') },
+      {
+        formType: 'contact',
+        summary,
+        source: getLeadSource('contact'),
+        honeypot: honeypot.value,
+      },
     )
 
     if (res.ok) trackSuccess(res.channel)
@@ -119,6 +126,7 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-5">
+      {honeypot.field}
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Name" htmlFor="c-name" required error={errors.name}>
           <TextInput

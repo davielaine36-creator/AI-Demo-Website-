@@ -62,9 +62,9 @@ export interface SubmitResult {
  * Submit form data.
  *
  * The browser always POSTs to the same-origin proxy at INTAKE_ENDPOINT
- * (/api/intake). That serverless function holds the real n8n webhook URL as a
- * server-only secret and forwards the payload — the URL is never exposed in the
- * client bundle. The server decides whether a webhook is configured:
+ * (/api/intake). That serverless function maps the payload to Factory HQ and
+ * forwards it with a server-only inbound secret — never exposed in the client
+ * bundle. The server decides whether Factory intake is configured:
  *   - 503 { configured: false } → no webhook set; caller shows the copy/email
  *     fallback (channel: 'fallback', no error note).
  *   - non-OK otherwise          → forward failed (channel: 'webhook', shows note
@@ -96,7 +96,7 @@ export async function submitForm(
         source: meta.source,
         leadScore: meta.leadScore,
         leadStatus: meta.leadStatus,
-        // Anti-bot honeypot. n8n's "Honeypot?" node rejects non-empty values.
+        // Anti-bot honeypot. Factory intake silently drops non-empty honeypot values.
         hp: meta.honeypot ?? '',
         data: payload,
       }),

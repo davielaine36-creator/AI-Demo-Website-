@@ -23,6 +23,7 @@ import CaseStudies from './pages/CaseStudies'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Privacy from './pages/Privacy'
+import ThankYou from './pages/ThankYou'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -60,6 +61,8 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy" element={<Privacy />} />
+          {/* Stripe Checkout success_url landing — confirmation only, not a receipt. */}
+          <Route path="/thank-you" element={<ThankYou />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

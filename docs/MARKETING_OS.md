@@ -130,6 +130,7 @@ side door.
 | `/full-intake` | Full Intake Questionnaire | Deep discovery |
 | `/demos` | Interactive Demos | Proof |
 | `/contact`, `/about`, `/privacy` | — | Trust |
+| `/thank-you` | Thank You — Website Rescue deposit | Stripe Checkout success landing (confirmation only) |
 
 **Implemented:** per-page `<SEO>` component (`src/components/SEO.tsx`) sets
 title, description, canonical, OG, and Twitter tags. Static `Organization` +
